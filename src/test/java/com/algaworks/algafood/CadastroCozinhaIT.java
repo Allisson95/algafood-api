@@ -1,10 +1,14 @@
 package com.algaworks.algafood;
 
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 
 import javax.validation.ConstraintViolationException;
 
+import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,40 +26,58 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class CadastroCozinhaIT {
-	
+class CadastroCozinhaIT {
+
 	@LocalServerPort
 	private int port;
-	
+
+	@Autowired
+	private Flyway flyway;
+
 	@BeforeEach
 	public void setUp() {
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = port;
 		RestAssured.basePath = "/cozinhas";
+
+		flyway.migrate();
 	}
-	
+
 	@Test
-	public void deve_retornar_status_200_quando_consultar_cozinhas() {
-		RestAssured.given()
+	void deve_retornar_status_200_quando_consultar_cozinhas() {
+		given()
 			.accept(ContentType.JSON)
 		.when()
 			.get()
 		.then()
 			.statusCode(200);
 	}
-	
+
 	@Test
-	public void deve_conter_4_cozinhas_quando_consultar_cozinhas() {
-		RestAssured.given()
+	void deve_conter_4_cozinhas_quando_consultar_cozinhas() {
+		given()
 			.accept(ContentType.JSON)
 		.when()
 			.get()
 		.then()
-			.body("", Matchers.hasSize(4))
-			.body("nome", Matchers.hasItems("Indiana", "Tailandesa"));
+			.body("", hasSize(4))
+			.body("nome", hasItems("Indiana", "Tailandesa"));
 	}
 
-	
+	@Test
+	void deve_retornar_status_201_quando_cadastrar_cozinha() {
+		Cozinha novaCozinha = new Cozinha();
+		novaCozinha.setNome("Chinesa");
+
+		given()
+			.accept(ContentType.JSON)
+			.contentType(ContentType.JSON)
+			.body(novaCozinha)
+		.when()
+			.post()
+		.then()
+			.statusCode(201);
+	}
 	
 //	@Autowired
 //	private CadastroCozinhaService cadastroCozinha;
