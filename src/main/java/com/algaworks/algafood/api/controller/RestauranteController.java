@@ -37,6 +37,9 @@ public class RestauranteController {
 	@Autowired
 	private CadastroRestauranteService cadastroRestaurante;
 
+	@Autowired
+	private ObjectMapper mapper;
+	
 	@GetMapping("/teste")
 	public List<Restaurante> teste(
 			@RequestParam("nome") String nome,
@@ -96,7 +99,6 @@ public class RestauranteController {
 	
 	@SuppressWarnings("unchecked")
 	private <T> T merge(Map<String, Object> data, T target, Class<T> clazz) {
-		ObjectMapper mapper = new ObjectMapper();
 		T convertedValue = mapper.convertValue(data, clazz);
 
 		data.forEach((propName, propValue) -> {

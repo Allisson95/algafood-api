@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.exceptionhandler;
 
 import java.util.stream.Collectors;
 
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
@@ -62,11 +64,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		Throwable rootCause = ex.getCause();
 
 		if (rootCause instanceof InvalidFormatException) {
-			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+			return handleInvalidFormat((InvalidFormatException) rootCause, headers, status, request);
 		}
 
 		if (rootCause instanceof PropertyBindingException) {
-			return handlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
+			return handlePropertyBinding((PropertyBindingException) rootCause, headers, status, request);
 		}
 
 		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
@@ -75,6 +77,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		Problem problem = createProblemBuilder(status, problemType, detail).build();
 
 		return this.handleExceptionInternal(ex, problem, headers, status, request);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		if (ex instanceof MethodArgumentTypeMismatchException) {
+			return handleMethodArgumentTypeMismatch((MethodArgumentTypeMismatchException) ex, headers, status, request);
+		}
+
+		return super.handleTypeMismatch(ex, headers, status, request);
 	}
 
 	/**
@@ -103,7 +117,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
 
-	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+	private ResponseEntity<Object> handleInvalidFormat(InvalidFormatException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 		String path = ex.getPath().stream().map(Reference::getFieldName).collect(Collectors.joining("."));
 
 		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
@@ -116,7 +130,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return this.handleExceptionInternal(ex, problem, headers, status, request);
 	}
 
-	private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+	private ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		ProblemType problemType = ProblemType.PARAMETRO_INVALIDO;
+		String detail = String.format(
+				"O parâmetro de URL '%s' recebeu o valor '%s', que é de um tipo inválido. Corrija e informe um valor compatível com o tipo %s.",
+				((MethodArgumentTypeMismatchException) ex).getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
+		
+		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		
+		return this.handleExceptionInternal(ex, problem, headers, status, request);
+	}
+
+	private ResponseEntity<Object> handlePropertyBinding(PropertyBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 		String path = ex.getPath().stream().map(Reference::getFieldName).collect(Collectors.joining("."));
 
 		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
