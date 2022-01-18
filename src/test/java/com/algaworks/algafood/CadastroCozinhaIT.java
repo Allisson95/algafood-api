@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import javax.validation.ConstraintViolationException;
 
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,13 +27,16 @@ public class CadastroCozinhaIT {
 	@LocalServerPort
 	private int port;
 	
+	@BeforeEach
+	public void setUp() {
+		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+		RestAssured.port = port;
+		RestAssured.basePath = "/cozinhas";
+	}
+	
 	@Test
 	public void deve_retornar_status_200_quando_consultar_cozinhas() {
-		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-		
 		RestAssured.given()
-			.basePath("/cozinhas")
-			.port(port)
 			.accept(ContentType.JSON)
 		.when()
 			.get()
@@ -42,17 +46,13 @@ public class CadastroCozinhaIT {
 	
 	@Test
 	public void deve_conter_4_cozinhas_quando_consultar_cozinhas() {
-		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-		
 		RestAssured.given()
-			.basePath("/cozinhas")
-			.port(port)
 			.accept(ContentType.JSON)
 		.when()
 			.get()
 		.then()
 			.body("", Matchers.hasSize(4))
-			.body("nome", Matchers.hasItems("Indiana", "Tailandesaaa"));
+			.body("nome", Matchers.hasItems("Indiana", "Tailandesa"));
 	}
 
 	
