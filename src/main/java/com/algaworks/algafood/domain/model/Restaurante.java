@@ -45,6 +45,7 @@ public class Restaurante {
 	@JoinColumn(name = "cozinha_id")
 	private Cozinha cozinha;
 
+	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 
