@@ -1,0 +1,40 @@
+CREATE TABLE pedido (
+	id BIGINT NOT NULL AUTO_INCREMENT,
+	codigo VARCHAR(100) NOT NULL,
+	subtotal DECIMAL(19,4) NOT NULL,
+	taxa_frete DECIMAL(19,4) NOT NULL,
+	valor_total DECIMAL(19,4) NOT NULL,
+	data_criacao DATETIME NOT NULL,
+	data_confirmacao DATETIME NOT NULL,
+	data_entrega DATETIME NOT NULL,
+	data_cancelamento DATETIME NOT NULL,
+	status ENUM('CRIADO', 'CONFIRMADO', 'ENTREGUE', 'CANCELADO'),
+	endereco_logradouro VARCHAR(100) NOT NULL,
+	endereco_numero VARCHAR(50) NOT NULL,
+	endereco_complemento VARCHAR(100),
+	endereco_bairro VARCHAR(100) NOT NULL,
+	endereco_cep VARCHAR(8) NOT NULL,
+	endereco_cidade_id BIGINT NOT NULL,
+	restaurante_id BIGINT NOT NULL,
+	forma_pagamento_id BIGINT NOT NULL,
+	usuario_cliente_id BIGINT NOT NULL,
+	CONSTRAINT pk_pedido PRIMARY KEY (id),
+	CONSTRAINT fk_pedido_cidade FOREIGN KEY (endereco_cidade_id) REFERENCES cidade (id),
+	CONSTRAINT fk_pedido_restaurante FOREIGN KEY (restaurante_id) REFERENCES restaurante (id),
+	CONSTRAINT fk_pedido_forma_pagamento FOREIGN KEY (forma_pagamento_id) REFERENCES forma_pagamento (id),
+	CONSTRAINT fk_pedido_usuario FOREIGN KEY (usuario_cliente_id) REFERENCES usuario (id)
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+
+CREATE TABLE item_pedido (
+	id BIGINT NOT NULL AUTO_INCREMENT,
+	quantidade INT NOT NULL,
+	preco_unitario DECIMAL(19,4) NOT NULL,
+	preco_total DECIMAL(19,4) NOT NULL,
+	observacao VARCHAR(255),
+	pedido_id BIGINT NOT NULL,
+	produto_id BIGINT NOT NULL,
+	CONSTRAINT pk_item_pedido PRIMARY KEY (id),
+	CONSTRAINT uk_item_pedido_produto UNIQUE KEY (pedido_id, produto_id),
+	CONSTRAINT fk_item_pedido_pedido FOREIGN KEY (pedido_id) REFERENCES pedido (id),
+	CONSTRAINT fk_item_pedido_produto FOREIGN KEY (produto_id) REFERENCES produto (id)
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
