@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import javax.validation.ConstraintViolationException;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,9 +38,25 @@ public class CadastroCozinhaIT {
 			.get()
 		.then()
 			.statusCode(200);
-			
+	}
+	
+	@Test
+	public void deve_conter_4_cozinhas_quando_consultar_cozinhas() {
+		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+		
+		RestAssured.given()
+			.basePath("/cozinhas")
+			.port(port)
+			.accept(ContentType.JSON)
+		.when()
+			.get()
+		.then()
+			.body("", Matchers.hasSize(4))
+			.body("nome", Matchers.hasItems("Indiana", "Tailandesaaa"));
 	}
 
+	
+	
 //	@Autowired
 //	private CadastroCozinhaService cadastroCozinha;
 //
