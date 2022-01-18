@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.assembler.RestauranteInputDisassembler;
+import com.algaworks.algafood.api.assembler.RestauranteModelAssembler;
 import com.algaworks.algafood.api.model.RestauranteModel;
-import com.algaworks.algafood.api.model.assembler.RestauranteInputDisassembler;
-import com.algaworks.algafood.api.model.assembler.RestauranteModelAssembler;
 import com.algaworks.algafood.api.model.input.RestauranteInput;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -87,15 +86,13 @@ public class RestauranteController {
 			@RequestBody @Valid RestauranteInput restauranteInput
 	) {
 		try {
-			Restaurante restaurante = restauranteInputDisassembler.toDomain(restauranteInput);
+			Restaurante restaurante = cadastroRestaurante.buscar(restauranteId);
 
-			Restaurante restauranteSalvo = cadastroRestaurante.buscar(restauranteId);
+			restauranteInputDisassembler.copyToDomain(restauranteInput, restaurante);
 
-			BeanUtils.copyProperties(restaurante, restauranteSalvo, "id", "endereco", "formasPagamento", "dataCadastro", "produtos");
+			restaurante = cadastroRestaurante.salvar(restaurante);
 
-			restauranteSalvo = cadastroRestaurante.salvar(restauranteSalvo);
-
-			return restauranteModelAssembler.toModel(restauranteSalvo);
+			return restauranteModelAssembler.toModel(restaurante);
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
