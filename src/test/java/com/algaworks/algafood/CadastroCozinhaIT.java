@@ -2,6 +2,7 @@ package com.algaworks.algafood;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,6 +88,29 @@ class CadastroCozinhaIT {
 			.post()
 		.then()
 			.statusCode(201);
+	}
+	
+	@Test
+	void deve_retornar_status_200_quando_consultar_cozinha_existente() {
+		given()
+			.accept(ContentType.JSON)
+			.pathParam("cozinhaId", 1L)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(200)
+			.body("nome", equalTo("Indiana"));
+	}
+
+	@Test
+	void deve_retornar_status_404_quando_consultar_cozinha_inexistente() {
+		given()
+			.accept(ContentType.JSON)
+			.pathParam("cozinhaId", 100L)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(404);
 	}
 
 	private void fillTestData() {
