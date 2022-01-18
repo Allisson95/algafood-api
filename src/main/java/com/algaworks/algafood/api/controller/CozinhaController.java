@@ -38,8 +38,8 @@ public class CozinhaController {
 	}
 
 	@GetMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long id) {
-		Cozinha cozinha = cozinhas.buscar(id);
+	public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long cozinhaId) {
+		Cozinha cozinha = cozinhas.buscar(cozinhaId);
 
 		if (cozinha != null) {
 			return ResponseEntity.ok(cozinha);
@@ -55,8 +55,8 @@ public class CozinhaController {
 	}
 
 	@PutMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> atualizar(@PathVariable("cozinhaId") Long id, @RequestBody Cozinha cozinha) {
-		Cozinha cozinhaAtual = cozinhas.buscar(id);
+	public ResponseEntity<Cozinha> atualizar(@PathVariable("cozinhaId") Long cozinhaId, @RequestBody Cozinha cozinha) {
+		Cozinha cozinhaAtual = cozinhas.buscar(cozinhaId);
 
 		if (cozinhaAtual == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
