@@ -3,16 +3,18 @@ package com.algaworks.algafood;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 
-import javax.validation.ConstraintViolationException;
+//import javax.validation.ConstraintViolationException;
 
-import org.flywaydb.core.Flyway;
-import org.hamcrest.Matchers;
+//import org.flywaydb.core.Flyway;
+//import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,11 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
-import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
-import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
+//import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
+//import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
-import com.algaworks.algafood.domain.service.CadastroCozinhaService;
+//import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 import com.algaworks.algafood.util.DatabaseCleaner;
 
 import io.restassured.RestAssured;
@@ -34,6 +36,10 @@ import io.restassured.http.ContentType;
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class CadastroCozinhaIT {
+
+	private static final Long COZINHA_ID_INEXISTENTE = 100L;
+
+	private int quantidadeCozinhasCadastradas;
 
 	@LocalServerPort
 	private int port;
@@ -65,14 +71,14 @@ class CadastroCozinhaIT {
 	}
 
 	@Test
-	void deve_conter_2_cozinhas_quando_consultar_cozinhas() {
+	void deve_retornar_todas_cozinhas_quando_consultar_cozinhas() {
 		given()
 			.accept(ContentType.JSON)
 		.when()
 			.get()
 		.then()
-			.body("", hasSize(2))
-			.body("nome", hasItems("Indiana", "Tailandesa"));
+			.statusCode(200)
+			.body("", hasSize(quantidadeCozinhasCadastradas));
 	}
 
 	@Test
@@ -87,26 +93,32 @@ class CadastroCozinhaIT {
 		.when()
 			.post()
 		.then()
-			.statusCode(201);
+			.statusCode(201)
+			.body("id", is(notNullValue()))
+			.body("nome", equalTo(novaCozinha.getNome()));
 	}
-	
+
 	@Test
 	void deve_retornar_status_200_quando_consultar_cozinha_existente() {
+		Cozinha novaCozinha = new Cozinha();
+		novaCozinha.setNome("Chinesa");
+		novaCozinha = cozinhaRepository.save(novaCozinha);
+
 		given()
 			.accept(ContentType.JSON)
-			.pathParam("cozinhaId", 1L)
+			.pathParam("cozinhaId", novaCozinha.getId())
 		.when()
 			.get("/{cozinhaId}")
 		.then()
 			.statusCode(200)
-			.body("nome", equalTo("Indiana"));
+			.body("nome", equalTo(novaCozinha.getNome()));
 	}
 
 	@Test
 	void deve_retornar_status_404_quando_consultar_cozinha_inexistente() {
 		given()
 			.accept(ContentType.JSON)
-			.pathParam("cozinhaId", 100L)
+			.pathParam("cozinhaId", COZINHA_ID_INEXISTENTE)
 		.when()
 			.get("/{cozinhaId}")
 		.then()
@@ -114,15 +126,16 @@ class CadastroCozinhaIT {
 	}
 
 	private void fillTestData() {
-		Cozinha cozinha1 = new Cozinha();
-		cozinha1.setNome("Indiana");
+		Cozinha cozinhaIndiana = new Cozinha();
+		cozinhaIndiana.setNome("Indiana");
 
-		Cozinha cozinha2 = new Cozinha();
-		cozinha2.setNome("Tailandesa");
+		Cozinha cozinhaTailandesa = new Cozinha();
+		cozinhaTailandesa.setNome("Tailandesa");
 
-		cozinhaRepository.saveAll(Arrays.asList(cozinha1, cozinha2));
+		cozinhaRepository.saveAll(Arrays.asList(cozinhaIndiana, cozinhaTailandesa));
+		quantidadeCozinhasCadastradas = (int) cozinhaRepository.count();
 	}
-	
+
 //	@Autowired
 //	private CadastroCozinhaService cadastroCozinha;
 //
