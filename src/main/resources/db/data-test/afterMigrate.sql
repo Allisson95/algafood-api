@@ -1,3 +1,30 @@
+SET foreign_key_checks = 0;
+
+DELETE FROM cidade;
+DELETE FROM cozinha;
+DELETE FROM estado;
+DELETE FROM forma_pagamento;
+DELETE FROM grupo;
+DELETE FROM grupo_permissao;
+DELETE FROM permissao;
+DELETE FROM produto;
+DELETE FROM restaurante;
+DELETE FROM restaurante_forma_pagamento;
+DELETE FROM usuario;
+DELETE FROM usuario_grupo;
+
+SET foreign_key_checks = 1;
+
+ALTER TABLE cidade AUTO_INCREMENT = 1;
+ALTER TABLE cozinha AUTO_INCREMENT = 1;
+ALTER TABLE estado AUTO_INCREMENT = 1;
+ALTER TABLE forma_pagamento AUTO_INCREMENT = 1;
+ALTER TABLE grupo AUTO_INCREMENT = 1;
+ALTER TABLE permissao AUTO_INCREMENT = 1;
+ALTER TABLE produto AUTO_INCREMENT = 1;
+ALTER TABLE restaurante AUTO_INCREMENT = 1;
+ALTER TABLE usuario AUTO_INCREMENT = 1;
+
 INSERT INTO cozinha (id, nome) VALUES (1, 'Tailandesa');
 INSERT INTO cozinha (id, nome) VALUES (2, 'Indiana');
 INSERT INTO cozinha (id, nome) VALUES (3, 'Argentina');
@@ -13,7 +40,7 @@ INSERT INTO cidade (id, nome, estado_id) VALUES (3, 'São Paulo', 2);
 INSERT INTO cidade (id, nome, estado_id) VALUES (4, 'Campinas', 2);
 INSERT INTO cidade (id, nome, estado_id) VALUES (5, 'Fortaleza', 3);
 
-INSERT INTO restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) VALUES (1, 'Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
+INSERT INTO restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) VALUES (1, 'Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp, 1, '38400999', 'Rua João Pinheiro', '1000', 'Centro');
 INSERT INTO restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) VALUES (2, 'Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp);
 INSERT INTO restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) VALUES (3, 'Tuk Tuk Comida Indiana', 15, 2, utc_timestamp, utc_timestamp);
 INSERT INTO restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) VALUES (4, 'Java Steakhouse', 12, 3, utc_timestamp, utc_timestamp);
