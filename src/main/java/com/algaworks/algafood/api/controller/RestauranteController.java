@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,18 +37,18 @@ public class RestauranteController {
 
 	@GetMapping
 	public List<Restaurante> listar() {
-		return this.restauranteRepository.listar();
+		return this.restauranteRepository.findAll();
 	}
 
 	@GetMapping("/{restauranteId}")
 	public ResponseEntity<Restaurante> buscar(@PathVariable("restauranteId") Long restauranteId) {
-		Restaurante restaurante = this.restauranteRepository.buscar(restauranteId);
+		Optional<Restaurante> restaurante = this.restauranteRepository.findById(restauranteId);
 
-		if (restaurante != null) {
-			return ResponseEntity.ok(restaurante);
+		if (restaurante.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		return ResponseEntity.ok(restaurante.get());
 	}
 
 	@PostMapping
@@ -67,17 +68,17 @@ public class RestauranteController {
 			@RequestBody Restaurante restaurante
 	) {
 		try {
-			Restaurante restauranteSalvo = this.restauranteRepository.buscar(restauranteId);
+			Optional<Restaurante> restauranteSalvo = this.restauranteRepository.findById(restauranteId);
 
-			if (restauranteSalvo == null) {
+			if (restauranteSalvo.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 
-			BeanUtils.copyProperties(restaurante, restauranteSalvo, "id");
+			BeanUtils.copyProperties(restaurante, restauranteSalvo.get(), "id");
 
-			restauranteSalvo = this.cadastroRestaurante.salvar(restauranteSalvo);
+			Restaurante novoRestaurante = this.cadastroRestaurante.salvar(restauranteSalvo.get());
 
-			return ResponseEntity.ok(restauranteSalvo);
+			return ResponseEntity.ok(novoRestaurante);
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
@@ -88,15 +89,15 @@ public class RestauranteController {
 			@PathVariable("restauranteId") Long restauranteId,
 			@RequestBody Map<String, Object> dados
 	) {
-		Restaurante restauranteSalvo = this.restauranteRepository.buscar(restauranteId);
+		Optional<Restaurante> restauranteSalvo = this.restauranteRepository.findById(restauranteId);
 
-		if (restauranteSalvo == null) {
+		if (restauranteSalvo.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 
-		restauranteSalvo = this.merge(dados, restauranteSalvo, Restaurante.class);
+		Restaurante novoRestaurante = this.merge(dados, restauranteSalvo.get(), Restaurante.class);
 
-		return this.atualizar(restauranteId, restauranteSalvo);
+		return this.atualizar(restauranteId, novoRestaurante);
 	}
 	
 	@SuppressWarnings("unchecked")
