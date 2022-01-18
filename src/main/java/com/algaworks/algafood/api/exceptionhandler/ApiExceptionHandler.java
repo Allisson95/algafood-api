@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(EntidadeEmUsoException.class)
-	public ResponseEntity<?> handleEntidadeEmUsoException(EntidadeEmUsoException ex, WebRequest request) {
+	public ResponseEntity<?> handleEntidadeEmUso(EntidadeEmUsoException ex, WebRequest request) {
 		HttpStatus status = HttpStatus.CONFLICT;
 		ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
 		String detail = ex.getMessage();
@@ -36,7 +36,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
-	public ResponseEntity<?> handleEntidadeNaoEncontradaException(EntidadeNaoEncontradaException ex, WebRequest request) {
+	public ResponseEntity<?> handleEntidadeNaoEncontrada(EntidadeNaoEncontradaException ex, WebRequest request) {
 		HttpStatus status = HttpStatus.NOT_FOUND;
 		ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
 		String detail = ex.getMessage();
@@ -47,7 +47,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(NegocioException.class)
-	public ResponseEntity<?> handleNegocioException(NegocioException ex, WebRequest request) {
+	public ResponseEntity<?> handleNegocio(NegocioException ex, WebRequest request) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		ProblemType problemType = ProblemType.ERRO_NEGOCIO;
 		String detail = ex.getMessage();
@@ -57,6 +57,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return this.handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<?> handleUncaught(Exception ex, WebRequest request) {
+		ex.printStackTrace();
+
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		String detail = "Ocorreu um erro inesperado no sistema. Tente novamente e se o problema persistir, entre em contato com o administrador do sistema";
+		ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
+
+		Problem problem = createProblemBuilder(status, problemType, detail).build();
+
+		return this.handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
