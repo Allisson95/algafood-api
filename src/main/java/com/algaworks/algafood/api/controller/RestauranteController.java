@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -14,10 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.model.RestauranteModel;
+import com.algaworks.algafood.api.model.assembler.RestauranteInputDisassembler;
+import com.algaworks.algafood.api.model.assembler.RestauranteModelAssembler;
+import com.algaworks.algafood.api.model.input.RestauranteInput;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -34,46 +38,64 @@ public class RestauranteController {
 	@Autowired
 	private CadastroRestauranteService cadastroRestaurante;
 
-	@GetMapping("/teste")
-	public List<Restaurante> teste(
-			@RequestParam("nome") String nome,
-			@RequestParam("taxaInicial") BigDecimal taxaInicial,
-			@RequestParam("taxaFinal") BigDecimal taxaFinal
-	) {
-		return restauranteRepository.find(nome, taxaInicial, taxaFinal);
-	}
+	@Autowired
+	private RestauranteModelAssembler restauranteModelAssembler;
+
+	@Autowired
+	private RestauranteInputDisassembler restauranteInputDisassembler;
+
+//	@GetMapping("/teste")
+//	public List<Restaurante> teste(
+//			@RequestParam("nome") String nome,
+//			@RequestParam("taxaInicial") BigDecimal taxaInicial,
+//			@RequestParam("taxaFinal") BigDecimal taxaFinal
+//	) {
+//		return restauranteRepository.find(nome, taxaInicial, taxaFinal);
+//	}
 
 	@GetMapping
-	public List<Restaurante> listar() {
-		return restauranteRepository.findAll();
+	public List<RestauranteModel> listar() {
+		List<Restaurante> restaurantes = restauranteRepository.findAll();
+		return restaurantes.stream()
+				.map(restauranteModelAssembler::toModel)
+				.collect(Collectors.toList());
 	}
 
 	@GetMapping("/{restauranteId}")
-	public Restaurante buscar(@PathVariable("restauranteId") Long restauranteId) {
-		return cadastroRestaurante.buscar(restauranteId);
+	public RestauranteModel buscar(@PathVariable("restauranteId") Long restauranteId) {
+		Restaurante restaurante = cadastroRestaurante.buscar(restauranteId);
+		return restauranteModelAssembler.toModel(restaurante);
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante) {
+	public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
-			return cadastroRestaurante.salvar(restaurante);
+			Restaurante restaurante = restauranteInputDisassembler.toDomain(restauranteInput);
+
+			Restaurante restauranteSalvo = cadastroRestaurante.salvar(restaurante);
+
+			return restauranteModelAssembler.toModel(restauranteSalvo);
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
 
 	@PutMapping("/{restauranteId}")
-	public Restaurante atualizar(
+	public RestauranteModel atualizar(
 			@PathVariable("restauranteId") Long restauranteId,
-			@RequestBody @Valid Restaurante restaurante
+			@RequestBody @Valid RestauranteInput restauranteInput
 	) {
 		try {
+			Restaurante restaurante = restauranteInputDisassembler.toDomain(restauranteInput);
+
 			Restaurante restauranteSalvo = cadastroRestaurante.buscar(restauranteId);
 
 			BeanUtils.copyProperties(restaurante, restauranteSalvo, "id", "endereco", "formasPagamento", "dataCadastro", "produtos");
 
-			return cadastroRestaurante.salvar(restauranteSalvo);
+			restauranteSalvo = cadastroRestaurante.salvar(restauranteSalvo);
+
+			return restauranteModelAssembler.toModel(restauranteSalvo);
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
