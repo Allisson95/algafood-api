@@ -16,6 +16,10 @@ public class CadastroCozinha {
 	@PersistenceContext
 	private EntityManager manager;
 
+	public Cozinha buscar(Long id) {
+		return manager.find(Cozinha.class, id);
+	}
+
 	public List<Cozinha> listar() {
 		return manager.createQuery("FROM Cozinha", Cozinha.class).getResultList();
 	}
