@@ -72,3 +72,9 @@ INSERT INTO permissao (id, nome, descricao) VALUES (2, 'EDITAR_COZINHAS', 'Permi
 INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 1), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3), (4, 1), (4, 2), (5, 1), (5, 2), (6, 3);
 
 INSERT INTO grupo (id, nome) VALUES (1, 'Administrador'), (2, 'Gerente'), (3, 'Atendente'), (4, 'Cadastrador');
+
+INSERT INTO usuario (id, nome, email, senha, data_cadastro) VALUES
+	(1, 'João da Silva', 'joao.ger@algafood.com', '123', utc_timestamp),
+	(2, 'Maria Joaquina', 'maria.vnd@algafood.com', '123', utc_timestamp),
+	(3, 'José Souza', 'jose.aux@algafood.com', '123', utc_timestamp),
+	(4, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '123', utc_timestamp);

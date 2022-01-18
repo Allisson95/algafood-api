@@ -15,6 +15,8 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.algaworks.algafood.domain.exception.NegocioException;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -46,5 +48,13 @@ public class Usuario {
 		joinColumns = { @JoinColumn(name = "usuario_id") },
 		inverseJoinColumns = { @JoinColumn(name = "grupo_id") })
 	private List<Grupo> grupos = new ArrayList<>(0);
+
+	public void alterarSenha(String senhaAtual, String novaSenha) {
+		if (!senhaAtual.equals(getSenha())) {
+			throw new NegocioException("Senha atual informada não coincide com a senha do usuário.");
+		}
+
+		setSenha(novaSenha);
+	}
 
 }
