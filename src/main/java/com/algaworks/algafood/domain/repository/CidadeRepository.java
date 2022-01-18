@@ -6,12 +6,12 @@ import com.algaworks.algafood.domain.model.Cidade;
 
 public interface CidadeRepository {
 
-	List<Cidade> todas();
+	List<Cidade> listar();
 
-	Cidade porId(Long id);
+	Cidade buscar(Long id);
 
-	Cidade adicionar(Cidade cidade);
+	Cidade salvar(Cidade cidade);
 
-	void remover(Cidade cidade);
+	void remover(Long id);
 
 }
