@@ -1,7 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -55,9 +54,7 @@ public class RestauranteController {
 	@GetMapping
 	public List<RestauranteModel> listar() {
 		List<Restaurante> restaurantes = restauranteRepository.findAll();
-		return restaurantes.stream()
-				.map(restauranteModelAssembler::toModel)
-				.collect(Collectors.toList());
+		return restauranteModelAssembler.toCollectionModel(restaurantes);
 	}
 
 	@GetMapping("/{restauranteId}")
@@ -86,13 +83,13 @@ public class RestauranteController {
 			@RequestBody @Valid RestauranteInput restauranteInput
 	) {
 		try {
-			Restaurante restaurante = cadastroRestaurante.buscar(restauranteId);
+			Restaurante restauranteSalvo = cadastroRestaurante.buscar(restauranteId);
 
-			restauranteInputDisassembler.copyToDomain(restauranteInput, restaurante);
+			restauranteInputDisassembler.copyToDomain(restauranteInput, restauranteSalvo);
 
-			restaurante = cadastroRestaurante.salvar(restaurante);
+			restauranteSalvo = cadastroRestaurante.salvar(restauranteSalvo);
 
-			return restauranteModelAssembler.toModel(restaurante);
+			return restauranteModelAssembler.toModel(restauranteSalvo);
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
