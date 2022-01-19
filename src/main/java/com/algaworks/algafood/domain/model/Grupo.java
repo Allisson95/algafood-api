@@ -35,11 +35,11 @@ public class Grupo {
 	private Set<Permissao> permissoes = new HashSet<>(0);
 
 	public boolean adicionarPermissao(Permissao permissao) {
-		return permissoes.add(permissao);
+		return getPermissoes().add(permissao);
 	}
 
 	public boolean removerPermissao(Permissao permissao) {
-		return permissoes.removeIf(p -> p.getId().equals(permissao.getId()));
+		return getPermissoes().removeIf(p -> p.getId().equals(permissao.getId()));
 	}
 
 }

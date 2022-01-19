@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
+import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 
@@ -16,6 +17,9 @@ public class CadastroUsuarioService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+
+	@Autowired
+	private CadastroGrupoService cadastroGrupo;
 
 	public Usuario buscar(Long usuarioId) {
 		return usuarioRepository.findById(usuarioId)
@@ -40,6 +44,22 @@ public class CadastroUsuarioService {
 	public void alterarSenha(Long usuarioId, String senhaAtual, String novaSenha) {
 		Usuario usuarioSalvo = buscar(usuarioId);
 		usuarioSalvo.alterarSenha(senhaAtual, novaSenha);
+	}
+
+	@Transactional
+	public void adicionarGrupo(Long usuarioId, Long grupoId) {
+		Usuario usuarioSalvo = buscar(usuarioId);
+		Grupo grupo = cadastroGrupo.buscar(grupoId);
+
+		usuarioSalvo.adicionarGrupo(grupo);
+	}
+
+	@Transactional
+	public void removerGrupo(Long usuarioId, Long grupoId) {
+		Usuario usuarioSalvo = buscar(usuarioId);
+		Grupo grupo = cadastroGrupo.buscar(grupoId);
+
+		usuarioSalvo.removerGrupo(grupo);
 	}
 
 }

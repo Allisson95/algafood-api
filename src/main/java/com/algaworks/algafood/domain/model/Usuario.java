@@ -1,8 +1,8 @@
 package com.algaworks.algafood.domain.model;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,9 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.algaworks.algafood.domain.exception.NegocioException;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,7 +47,7 @@ public class Usuario {
 	@JoinTable(name = "usuario_grupo",
 		joinColumns = { @JoinColumn(name = "usuario_id") },
 		inverseJoinColumns = { @JoinColumn(name = "grupo_id") })
-	private List<Grupo> grupos = new ArrayList<>(0);
+	private Set<Grupo> grupos = new HashSet<>(0);
 
 	public void alterarSenha(String senhaAtual, String novaSenha) {
 		if (!senhaAtual.equals(getSenha())) {
@@ -55,6 +55,14 @@ public class Usuario {
 		}
 
 		setSenha(novaSenha);
+	}
+
+	public boolean adicionarGrupo(Grupo grupo) {
+		return getGrupos().add(grupo);
+	}
+
+	public boolean removerGrupo(Grupo grupo) {
+		return getGrupos().removeIf(g -> g.getId().equals(grupo.getId()));
 	}
 
 }
