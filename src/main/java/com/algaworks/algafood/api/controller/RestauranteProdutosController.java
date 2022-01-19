@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -43,7 +44,7 @@ public class RestauranteProdutosController {
     @GetMapping
     public List<ProdutoModel> listar(@PathVariable Long restauranteId) {
         Restaurante restauranteSalvo = cadastroRestaurante.buscar(restauranteId);
-        List<Produto> produtos = restauranteSalvo.getProdutos();
+        Set<Produto> produtos = restauranteSalvo.getProdutos();
         return produtoModelAssembler.toCollectionModel(produtos);
     }
 

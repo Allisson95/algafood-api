@@ -86,3 +86,5 @@ INSERT INTO usuario (id, nome, email, senha, data_cadastro) VALUES
 	(4, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '123', utc_timestamp);
 
 INSERT INTO usuario_grupo (usuario_id, grupo_id) VALUES (1, 1), (2, 2), (2, 3), (3, 3), (4, 4);
+
+INSERT INTO restaurante_usuario_responsavel (restaurante_id, usuario_id) VALUES (1, 1), (2, 1), (2, 2), (3, 4), (4, 3);
