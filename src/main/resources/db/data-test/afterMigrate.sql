@@ -10,6 +10,7 @@ DELETE FROM permissao;
 DELETE FROM produto;
 DELETE FROM restaurante;
 DELETE FROM restaurante_forma_pagamento;
+DELETE FROM restaurante_usuario_responsavel;
 DELETE FROM usuario;
 DELETE FROM usuario_grupo;
 
