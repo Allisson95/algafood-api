@@ -68,10 +68,16 @@ INSERT INTO forma_pagamento (id, descricao) VALUES (3, 'Dinheiro');
 
 INSERT INTO permissao (id, nome, descricao) VALUES (1, 'CONSULTAR_COZINHAS', 'Permite consultar cozinhas');
 INSERT INTO permissao (id, nome, descricao) VALUES (2, 'EDITAR_COZINHAS', 'Permite editar cozinhas');
+INSERT INTO permissao (id, nome, descricao) VALUES (3, 'CONSULTAR_RESTAURANTES', 'Permite consultar restaurantes');
+INSERT INTO permissao (id, nome, descricao) VALUES (4, 'EDITAR_RESTAURANTES', 'Permite editar restaurantes');
+INSERT INTO permissao (id, nome, descricao) VALUES (5, 'CONSULTAR_PRODUTOS', 'Permite consultar produtos');
+INSERT INTO permissao (id, nome, descricao) VALUES (6, 'EDITAR_PRODUTOS', 'Permite editar produtos');
 
 INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 1), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3), (4, 1), (4, 2), (5, 1), (5, 2), (6, 3);
 
 INSERT INTO grupo (id, nome) VALUES (1, 'Administrador'), (2, 'Gerente'), (3, 'Atendente'), (4, 'Cadastrador');
+
+INSERT INTO grupo_permissao (grupo_id, permissao_id) VALUES (1, 1), (1, 2), (1, 3), (1, 4), (2, 2), (2, 4), (2, 6), (3, 5);
 
 INSERT INTO usuario (id, nome, email, senha, data_cadastro) VALUES
 	(1, 'João da Silva', 'joao.ger@algafood.com', '123', utc_timestamp),
