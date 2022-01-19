@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Cozinha;
@@ -59,6 +61,16 @@ public class CadastroRestauranteService {
 	public void desativar(Long restauranteId) {
 		Restaurante restauranteSalvo = buscar(restauranteId);
 		restauranteSalvo.desativar();
+	}
+
+	@Transactional
+    public void ativar(List<Long> restauranteIds) {
+		restauranteIds.forEach(this::ativar);
+    }
+
+	@Transactional
+	public void desativar(List<Long> restauranteIds) {
+		restauranteIds.forEach(this::desativar);
 	}
 
 	@Transactional
