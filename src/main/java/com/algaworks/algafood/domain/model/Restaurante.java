@@ -2,9 +2,7 @@ package com.algaworks.algafood.domain.model;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -25,10 +23,10 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
+import com.algaworks.algafood.core.validation.Groups;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.algaworks.algafood.core.validation.Groups;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -83,7 +81,13 @@ public class Restaurante {
 	private Set<FormaPagamento> formasPagamento = new HashSet<>(0);
 
 	@OneToMany(mappedBy = "restaurante")
-	private List<Produto> produtos = new ArrayList<>(0);
+	private Set<Produto> produtos = new HashSet<>(0);
+
+	@ManyToMany
+	@JoinTable(name = "restaurante_usuario_responsavel",
+		joinColumns = { @JoinColumn(name = "restaurante_id") },
+		inverseJoinColumns = { @JoinColumn(name = "usuario_id") })
+	private Set<Usuario> responsaveis = new HashSet<>(0);
 
 	public void ativar() {
 		setAtivo(true);
@@ -107,6 +111,14 @@ public class Restaurante {
 
 	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
 		return getFormasPagamento().removeIf(fp -> fp.equals(formaPagamento));
+	}
+
+	public boolean adicionarResponsavel(Usuario responsavel) {
+		return getResponsaveis().add(responsavel);
+	}
+
+	public boolean removerResponsavel(Usuario responsavel) {
+		return getResponsaveis().removeIf(fp -> fp.equals(responsavel));
 	}
 
 }
