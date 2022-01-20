@@ -27,6 +27,8 @@ ALTER TABLE permissao AUTO_INCREMENT = 1;
 ALTER TABLE produto AUTO_INCREMENT = 1;
 ALTER TABLE restaurante AUTO_INCREMENT = 1;
 ALTER TABLE usuario AUTO_INCREMENT = 1;
+ALTER TABLE pedido AUTO_INCREMENT = 1;
+ALTER TABLE item_pedido AUTO_INCREMENT = 1;
 
 INSERT INTO cozinha (id, nome) VALUES (1, 'Tailandesa');
 INSERT INTO cozinha (id, nome) VALUES (2, 'Indiana');

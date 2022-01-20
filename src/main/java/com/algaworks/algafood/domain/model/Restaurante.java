@@ -121,4 +121,12 @@ public class Restaurante {
 		return getResponsaveis().removeIf(fp -> fp.equals(responsavel));
 	}
 
+    public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormasPagamento().stream().anyMatch(fp -> fp.equals(formaPagamento));
+    }
+
+    public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return !aceitaFormaPagamento(formaPagamento);
+    }
+
 }

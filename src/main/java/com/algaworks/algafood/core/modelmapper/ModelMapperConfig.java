@@ -9,7 +9,11 @@ class ModelMapperConfig {
 
 	@Bean
 	public ModelMapper modelMapper() {
-		return new ModelMapper();
+		ModelMapper modelMapper = new ModelMapper();
+
+		modelMapper.addMappings(new ItemPedidoInputMap());
+
+		return modelMapper;
 	}
 
 }

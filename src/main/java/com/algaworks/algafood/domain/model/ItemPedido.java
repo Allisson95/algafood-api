@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.model;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,10 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "item_pedido")
@@ -44,5 +47,14 @@ public class ItemPedido {
 	@ManyToOne
 	@JoinColumn(name = "produto_id")
 	private Produto produto;
+
+	public void calcularValorTotal() {
+		BigDecimal valorUnitario = Optional.ofNullable(getPrecoUnitario()).orElse(BigDecimal.ZERO);
+		Integer qtd = Optional.ofNullable(getQuantidade()).orElse(0);
+
+		BigDecimal valorTotal = valorUnitario.multiply(BigDecimal.valueOf(qtd.longValue()));
+
+		setPrecoTotal(valorTotal);
+	}
 
 }
