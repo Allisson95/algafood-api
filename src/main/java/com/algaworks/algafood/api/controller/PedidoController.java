@@ -3,7 +3,9 @@ package com.algaworks.algafood.api.controller;
 import java.util.List;
 
 import com.algaworks.algafood.api.assembler.PedidoModelAssembler;
+import com.algaworks.algafood.api.assembler.PedidoResumoModelAssembler;
 import com.algaworks.algafood.api.model.PedidoModel;
+import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.CadastroPedidoService;
@@ -27,10 +29,13 @@ public class PedidoController {
     @Autowired
     private PedidoModelAssembler pedidoModelAssembler;
 
+    @Autowired
+    private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+
     @GetMapping
-    public List<PedidoModel> listar() {
+    public List<PedidoResumoModel> listar() {
         List<Pedido> pedidos = pedidoRepository.findAll();
-        return pedidoModelAssembler.toCollectionModel(pedidos);
+        return pedidoResumoModelAssembler.toCollectionModel(pedidos);
     }
 
     @GetMapping("/{pedidoId}")
