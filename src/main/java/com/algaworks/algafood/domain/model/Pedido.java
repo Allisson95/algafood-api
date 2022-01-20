@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -34,10 +35,10 @@ public class Pedido {
 	private Long id;
 
 	@Column(name = "codigo")
-	private String codigo;
+	private String codigo = UUID.randomUUID().toString();
 
 	@Column(name = "subtotal")
-	private BigDecimal subtotal;
+	private BigDecimal subTotal;
 
 	@Column(name = "taxa_frete")
 	private BigDecimal taxaFrete;
@@ -77,7 +78,18 @@ public class Pedido {
 	@JoinColumn(name = "usuario_cliente_id")
 	private Usuario cliente;
 
-	@OneToMany(mappedBy = "pedido")
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens = new ArrayList<>(0);
+
+	public void totalizarPedido() {
+		BigDecimal valorTotalDosItens = getItens().stream()
+				.peek(ItemPedido::calcularValorTotal)
+				.map(ItemPedido::getPrecoTotal)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		setSubTotal(valorTotalDosItens);
+
+		setValorTotal(valorTotalDosItens.add(getTaxaFrete()));
+	}
 
 }
