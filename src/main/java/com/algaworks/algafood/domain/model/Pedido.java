@@ -19,6 +19,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.algaworks.algafood.domain.exception.NegocioException;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
@@ -28,6 +30,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Pedido {
+
+	private static final String MSG_STATUS_NAO_PODE_SER_ALTERADO = "Status do pedido %d não pode ser alterado de %s para %s";
 
 	@EqualsAndHashCode.Include
 	@Id
@@ -81,6 +85,15 @@ public class Pedido {
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens = new ArrayList<>(0);
 
+	private void setStatus(StatusPedido novoStatus) {
+		if (getStatus().naoPodeAlterarPara(novoStatus)) {
+			throw new NegocioException(String.format(MSG_STATUS_NAO_PODE_SER_ALTERADO,
+					getId(), getStatus().getDescricao(), novoStatus.getDescricao()));
+		}
+
+		this.status = novoStatus;
+	}
+
 	public void totalizarPedido() {
 		BigDecimal valorTotalDosItens = getItens().stream()
 				.peek(ItemPedido::calcularValorTotal)
@@ -90,6 +103,21 @@ public class Pedido {
 		setSubTotal(valorTotalDosItens);
 
 		setValorTotal(valorTotalDosItens.add(getTaxaFrete()));
+	}
+
+	public void confirmar() {
+		setStatus(StatusPedido.CONFIRMADO);
+		setDataConfirmacao(OffsetDateTime.now());
+	}
+
+	public void entregar() {
+		setStatus(StatusPedido.ENTREGUE);
+		setDataEntrega(OffsetDateTime.now());
+	}
+
+	public void cancelar() {
+		setStatus(StatusPedido.CANCELADO);
+		setDataCancelamento(OffsetDateTime.now());
 	}
 
 }

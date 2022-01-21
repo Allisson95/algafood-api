@@ -16,12 +16,14 @@ import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
+import com.algaworks.algafood.domain.service.FluxoPedidoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,6 +38,9 @@ public class PedidoController {
 
     @Autowired
     private EmissaoPedidoService emissaoPedido;
+
+    @Autowired
+    private FluxoPedidoService fluxoPedido;
 
     @Autowired
     private PedidoModelAssembler pedidoModelAssembler;
@@ -75,6 +80,24 @@ public class PedidoController {
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
+    }
+
+    @PutMapping("/{pedidoId}/confirmacao")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void confirmar(@PathVariable Long pedidoId) {
+        fluxoPedido.confirmar(pedidoId);
+    }
+
+    @PutMapping("/{pedidoId}/entrega")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void entregar(@PathVariable Long pedidoId) {
+        fluxoPedido.entregar(pedidoId);
+    }
+
+    @PutMapping("/{pedidoId}/cancelamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancelar(@PathVariable Long pedidoId) {
+        fluxoPedido.cancelar(pedidoId);
     }
 
 }
