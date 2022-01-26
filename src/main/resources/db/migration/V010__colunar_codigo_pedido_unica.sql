@@ -1,0 +1,2 @@
+ALTER TABLE pedido MODIFY COLUMN codigo BINARY(16) NOT NULL;
+ALTER TABLE pedido ADD CONSTRAINT uk_pedido_codigo UNIQUE (codigo);

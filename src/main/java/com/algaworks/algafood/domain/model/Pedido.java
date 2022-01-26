@@ -31,7 +31,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class Pedido {
 
-	private static final String MSG_STATUS_NAO_PODE_SER_ALTERADO = "Status do pedido %d não pode ser alterado de %s para %s";
+	private static final String MSG_STATUS_NAO_PODE_SER_ALTERADO = "Status do pedido %s não pode ser alterado de %s para %s";
 
 	@EqualsAndHashCode.Include
 	@Id
@@ -39,7 +39,7 @@ public class Pedido {
 	private Long id;
 
 	@Column(name = "codigo")
-	private String codigo = UUID.randomUUID().toString();
+	private UUID codigo = UUID.randomUUID();
 
 	@Column(name = "subtotal")
 	private BigDecimal subTotal;
@@ -88,7 +88,7 @@ public class Pedido {
 	private void setStatus(StatusPedido novoStatus) {
 		if (getStatus().naoPodeAlterarPara(novoStatus)) {
 			throw new NegocioException(String.format(MSG_STATUS_NAO_PODE_SER_ALTERADO,
-					getId(), getStatus().getDescricao(), novoStatus.getDescricao()));
+					getCodigo().toString(), getStatus().getDescricao(), novoStatus.getDescricao()));
 		}
 
 		this.status = novoStatus;

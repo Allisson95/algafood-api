@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -39,9 +40,9 @@ public class EmissaoPedidoService {
     @Autowired
     private CadastroUsuarioService cadastroUsuario;
 
-    public Pedido buscar(Long pedidoId) {
-        return pedidoRepository.findById(pedidoId)
-                .orElseThrow(() -> new PedidoNaoEncontradoException(pedidoId));
+    public Pedido buscar(UUID codigoPedido) {
+        return pedidoRepository.findByCodigo(codigoPedido)
+                .orElseThrow(() -> new PedidoNaoEncontradoException(codigoPedido));
     }
 
     @Transactional

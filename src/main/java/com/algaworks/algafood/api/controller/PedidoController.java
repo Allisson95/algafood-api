@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -57,9 +58,9 @@ public class PedidoController {
         return pedidoResumoModelAssembler.toCollectionModel(pedidos);
     }
 
-    @GetMapping("/{pedidoId}")
-    public PedidoModel buscar(@PathVariable Long pedidoId) {
-        Pedido pedidoSalvo = emissaoPedido.buscar(pedidoId);
+    @GetMapping("/{codigoPedido}")
+    public PedidoModel buscar(@PathVariable UUID codigoPedido) {
+        Pedido pedidoSalvo = emissaoPedido.buscar(codigoPedido);
         return pedidoModelAssembler.toModel(pedidoSalvo);
     }
 
@@ -82,22 +83,22 @@ public class PedidoController {
         }
     }
 
-    @PutMapping("/{pedidoId}/confirmacao")
+    @PutMapping("/{codigoPedido}/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void confirmar(@PathVariable Long pedidoId) {
-        fluxoPedido.confirmar(pedidoId);
+    public void confirmar(@PathVariable UUID codigoPedido) {
+        fluxoPedido.confirmar(codigoPedido);
     }
 
-    @PutMapping("/{pedidoId}/entrega")
+    @PutMapping("/{codigoPedido}/entrega")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void entregar(@PathVariable Long pedidoId) {
-        fluxoPedido.entregar(pedidoId);
+    public void entregar(@PathVariable UUID codigoPedido) {
+        fluxoPedido.entregar(codigoPedido);
     }
 
-    @PutMapping("/{pedidoId}/cancelamento")
+    @PutMapping("/{codigoPedido}/cancelamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelar(@PathVariable Long pedidoId) {
-        fluxoPedido.cancelar(pedidoId);
+    public void cancelar(@PathVariable UUID codigoPedido) {
+        fluxoPedido.cancelar(codigoPedido);
     }
 
 }

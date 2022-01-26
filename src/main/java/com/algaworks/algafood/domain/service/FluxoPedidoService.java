@@ -1,5 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
+import java.util.UUID;
+
 import com.algaworks.algafood.domain.model.Pedido;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,20 +15,20 @@ public class FluxoPedidoService {
     private EmissaoPedidoService emissaoPedido;
 
     @Transactional
-    public void confirmar(Long pedidoId) {
-        Pedido pedidoSalvo = emissaoPedido.buscar(pedidoId);
+    public void confirmar(UUID codigoPedido) {
+        Pedido pedidoSalvo = emissaoPedido.buscar(codigoPedido);
         pedidoSalvo.confirmar();
     }
 
     @Transactional
-    public void entregar(Long pedidoId) {
-        Pedido pedidoSalvo = emissaoPedido.buscar(pedidoId);
+    public void entregar(UUID codigoPedido) {
+        Pedido pedidoSalvo = emissaoPedido.buscar(codigoPedido);
         pedidoSalvo.entregar();
     }
 
     @Transactional
-    public void cancelar(Long pedidoId) {
-        Pedido pedidoSalvo = emissaoPedido.buscar(pedidoId);
+    public void cancelar(UUID codigoPedido) {
+        Pedido pedidoSalvo = emissaoPedido.buscar(codigoPedido);
         pedidoSalvo.cancelar();
     }
 
