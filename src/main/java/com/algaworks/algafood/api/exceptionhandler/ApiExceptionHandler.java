@@ -10,6 +10,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -186,6 +187,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 					.timestamp(OffsetDateTime.now())
 					.build();
 		}
+
+		headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
 
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
