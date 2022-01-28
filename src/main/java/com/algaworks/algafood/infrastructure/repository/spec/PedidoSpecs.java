@@ -10,6 +10,10 @@ import com.algaworks.algafood.domain.repository.PedidoFilter;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PedidoSpecs {
     
     public static Specification<Pedido> filter(PedidoFilter filter) {
