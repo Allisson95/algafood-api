@@ -1,4 +1,4 @@
-package com.algaworks.algafood.domain.repository;
+package com.algaworks.algafood.domain.filter;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -11,9 +11,8 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class PedidoFilter {
+public class VendaDiariaFilter {
 
-    private Optional<Long> clienteId = Optional.empty();
     private Optional<Long> restauranteId = Optional.empty();
 
     @DateTimeFormat(iso = ISO.DATE_TIME)

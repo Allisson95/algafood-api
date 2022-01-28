@@ -100,3 +100,10 @@ INSERT INTO item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, 
 
 INSERT INTO pedido (id, codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro, status, data_criacao, subtotal, taxa_frete, valor_total) VALUES (2, UUID_TO_BIN('10d6ee07-79b5-11ec-9a17-0242ac1b0002'), 4, 1, 2, 1, '38400111', 'Rua Acre', '300', 'Casa 2', 'Centro', 'CRIADO', utc_timestamp, 79, 0, 79);
 INSERT INTO item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao) VALUES (3, 2, 6, 1, 79, 79, 'Ao ponto');
+
+INSERT INTO pedido (id, codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro, status, data_criacao, data_confirmacao, subtotal, taxa_frete, valor_total) VALUES (3, UUID_TO_BIN('03958102-33ff-478b-a248-0a06f76b80fb'), 5, 1, 1, 1, '38400111', 'Rua Acre', '300', 'Casa 2', 'Centro', 'CONFIRMADO', utc_timestamp, utc_timestamp, 19, 0, 19);
+INSERT INTO item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao) VALUES (4, 3, 8, 1, 19, 19, 'Sem bacon');
+
+INSERT INTO pedido (id, codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro, status, data_criacao, data_confirmacao, data_entrega, subtotal, taxa_frete, valor_total) VALUES (4, UUID_TO_BIN('142e056f-a050-41ea-9381-1cd5ab137d03'), 3, 1, 2, 1, '38400111', 'Rua Acre', '300', 'Casa 2', 'Centro', 'ENTREGUE', utc_timestamp, utc_timestamp, utc_timestamp, 85, 15, 100);
+INSERT INTO item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total) VALUES (5, 4, 5, 1, 43, 43);
+INSERT INTO item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total) VALUES (6, 4, 4, 2, 21, 42);
