@@ -3,6 +3,7 @@ package com.algaworks.algafood.domain.service;
 import java.io.InputStream;
 import java.util.Optional;
 
+import com.algaworks.algafood.domain.exception.FotoProdutoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
 import com.algaworks.algafood.domain.service.FileStorageService.File;
@@ -19,6 +20,11 @@ public class CatalogoFotoProdutoService {
 
     @Autowired
     private FileStorageService fileStorage;
+
+    public FotoProduto buscar(Long restauranteId, Long produtoId) {
+        return produtoRepository.findFotoById(restauranteId, produtoId)
+            .orElseThrow(() -> new FotoProdutoNaoEncontradoException(restauranteId, produtoId));
+    }
 
     @Transactional
     public FotoProduto salvar(FotoProduto foto, InputStream arquivo) {

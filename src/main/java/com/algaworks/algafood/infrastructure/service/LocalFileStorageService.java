@@ -20,6 +20,16 @@ public class LocalFileStorageService implements FileStorageService {
     }
 
     @Override
+    public InputStream get(String fileName) {
+        try {
+            Path target = resolveFilePath(fileName);
+            return Files.newInputStream(target);
+        } catch (Exception e) {
+            throw new StorageException("Não foi possível recuperar o arquivo", e);
+        }
+    }
+
+    @Override
     public void store(File file) {
         try {
             String fileName = file.getName();
@@ -29,7 +39,7 @@ public class LocalFileStorageService implements FileStorageService {
 
             Files.copy(fileStream, target);
         } catch (Exception e) {
-            throw new StorageException("Não foi possível armazenar arquivo", e);
+            throw new StorageException("Não foi possível armazenar o arquivo", e);
         }
     }
 
@@ -39,7 +49,7 @@ public class LocalFileStorageService implements FileStorageService {
             Path target = resolveFilePath(fileName);
             Files.deleteIfExists(target);
         } catch (Exception e) {
-            throw new StorageException("Não foi possível remover arquivo", e);
+            throw new StorageException("Não foi possível remover o arquivo", e);
         }
     }
 

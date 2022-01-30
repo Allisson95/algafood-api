@@ -8,6 +8,8 @@ import lombok.Getter;
 
 public interface FileStorageService {
 
+    InputStream get(String fileName);
+
     void store(File file);
 
     void remove(String fileName);
