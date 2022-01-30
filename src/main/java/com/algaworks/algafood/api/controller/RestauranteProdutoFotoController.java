@@ -1,7 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
-import java.nio.file.Path;
-import java.util.UUID;
+import java.io.IOException;
 
 import javax.validation.Valid;
 
@@ -35,7 +34,7 @@ public class RestauranteProdutoFotoController {
     private FotoProdutoModelAssembler fotoProdutoModelAssembler;
 
     @PutMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, @Valid FotoProdutoInput input) {
+    public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, @Valid FotoProdutoInput input) throws IOException {
         Produto produto = cadastroProduto.buscar(restauranteId, produtoId);
 
         MultipartFile arquivo = input.getArquivo();
@@ -47,7 +46,7 @@ public class RestauranteProdutoFotoController {
         foto.setTamanho(arquivo.getSize());
         foto.setNome(arquivo.getOriginalFilename());
 
-        foto = catalogoFotoProduto.salvar(foto);
+        foto = catalogoFotoProduto.salvar(foto, arquivo.getInputStream());
 
         return fotoProdutoModelAssembler.toModel(foto);
     }
