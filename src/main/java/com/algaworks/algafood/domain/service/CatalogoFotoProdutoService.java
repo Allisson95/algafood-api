@@ -1,7 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
 import java.io.InputStream;
-import java.util.Optional;
 
 import com.algaworks.algafood.domain.exception.FotoProdutoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.FotoProduto;
@@ -31,12 +30,14 @@ public class CatalogoFotoProdutoService {
         Long restauranteId = foto.getProduto().getRestaurante().getId();
         Long produtoId = foto.getProduto().getId();
         String novoNome = fileStorage.generateRandomName(foto.getNome());
-        String nomeFotoExistente = null;
 
-        Optional<FotoProduto> fotoProduto = produtoRepository.findFotoById(restauranteId, produtoId);
-        if (fotoProduto.isPresent()) {
-            produtoRepository.remove(fotoProduto.get());
-            nomeFotoExistente = fotoProduto.get().getNome();
+        String nomeFotoExistente = null;
+        try {
+            FotoProduto fotoExistente = buscar(restauranteId, produtoId);
+            produtoRepository.remove(fotoExistente);
+            nomeFotoExistente = fotoExistente.getNome();
+        } catch (FotoProdutoNaoEncontradoException e) {
+            // Não existe foto cadastrada para substituição, então cadastra uma nova.
         }
 
         foto.setNome(novoNome);
@@ -51,6 +52,16 @@ public class CatalogoFotoProdutoService {
         fileStorage.replace(file, nomeFotoExistente);
 
         return foto;
+    }
+
+    @Transactional
+    public void remover(Long restauranteId, Long produtoId) {
+        FotoProduto fotoSalva = buscar(restauranteId, produtoId);
+
+        produtoRepository.remove(fotoSalva);
+        produtoRepository.flush();
+
+        fileStorage.remove(fotoSalva.getNome());
     }
 
 }
