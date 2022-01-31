@@ -2,13 +2,12 @@ package com.algaworks.algafood.core.storage;
 
 import java.nio.file.Path;
 
-import com.amazonaws.regions.Regions;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 import lombok.Setter;
+import software.amazon.awssdk.regions.Region;
 
 @Getter
 @Setter
@@ -36,7 +35,7 @@ public class StorageProperties {
         private String accessKey;
         private String secretKey;
         private String bucket;
-        private Regions region;
+        private Region region;
         private String dir;
     }
 

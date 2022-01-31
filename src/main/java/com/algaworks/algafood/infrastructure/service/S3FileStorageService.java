@@ -5,20 +5,19 @@ import java.net.URL;
 import com.algaworks.algafood.core.storage.StorageProperties;
 import com.algaworks.algafood.domain.service.FileStorageService;
 import com.algaworks.algafood.infrastructure.exception.StorageException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.AccessControlList;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.GroupGrantee;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.Permission;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import lombok.RequiredArgsConstructor;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetUrlRequest;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @RequiredArgsConstructor
 public class S3FileStorageService implements FileStorageService {
 
-    private final AmazonS3 s3;
+    private final S3Client s3;
     private final StorageProperties storageProperties;
 
     @Override
@@ -26,7 +25,11 @@ public class S3FileStorageService implements FileStorageService {
         try {
             String key = resolveKey(fileName);
 
-            URL url = s3.getUrl(storageProperties.getS3().getBucket(), key);
+            GetUrlRequest getUrlRequest = GetUrlRequest.builder()
+                    .bucket(storageProperties.getS3().getBucket())
+                    .key(key)
+                    .build();
+            URL url = s3.utilities().getUrl(getUrlRequest);
 
             return RecoveredFile.builder()
                     .url(url)
@@ -38,24 +41,18 @@ public class S3FileStorageService implements FileStorageService {
 
     @Override
     public void store(File file) {
-        AccessControlList acl = new AccessControlList();
-        acl.grantPermission(GroupGrantee.AllUsers, Permission.Read);
-
         try {
             String key = resolveKey(file.getName());
 
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(file.getContentType());
-            metadata.setContentLength(file.getSize());
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(storageProperties.getS3().getBucket())
+                    .key(key)
+                    .contentType(file.getContentType())
+                    .contentLength(file.getSize())
+                    .acl(ObjectCannedACL.PUBLIC_READ)
+                    .build();
 
-            PutObjectRequest putObjectRequest = new PutObjectRequest(
-                    storageProperties.getS3().getBucket(),
-                    key,
-                    file.getContent(),
-                    metadata)
-                            .withAccessControlList(acl);
-
-            s3.putObject(putObjectRequest);
+            s3.putObject(putObjectRequest, RequestBody.fromInputStream(file.getContent(), file.getSize()));
         } catch (Exception e) {
             throw new StorageException("Não foi possível armazenar o arquivo", e);
         }
@@ -66,8 +63,10 @@ public class S3FileStorageService implements FileStorageService {
         try {
             String key = resolveKey(fileName);
 
-            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(storageProperties.getS3().getBucket(),
-                    key);
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(storageProperties.getS3().getBucket())
+                    .key(key)
+                    .build();
 
             s3.deleteObject(deleteObjectRequest);
         } catch (Exception e) {

@@ -5,26 +5,26 @@ import com.algaworks.algafood.core.storage.StorageProperties.TypeStorage;
 import com.algaworks.algafood.domain.service.FileStorageService;
 import com.algaworks.algafood.infrastructure.service.LocalFileStorageService;
 import com.algaworks.algafood.infrastructure.service.S3FileStorageService;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
 public class StorageConfig {
 
     @Bean
-    public AmazonS3 amazonS3(StorageProperties storageProperties) {
+    public S3Client amazonS3(StorageProperties storageProperties) {
         S3 s3Properties = storageProperties.getS3();
-        AWSCredentials credentials = new BasicAWSCredentials(s3Properties.getAccessKey(), s3Properties.getSecretKey());
+        AwsCredentials credentials = AwsBasicCredentials.create(s3Properties.getAccessKey(), s3Properties.getSecretKey());
 
-        return AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(s3Properties.getRegion())
+        return S3Client.builder()
+                .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                .region(s3Properties.getRegion())
                 .build();
     }
 

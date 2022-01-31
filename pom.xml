@@ -16,7 +16,7 @@
 	<description>API de delivery de comida</description>
 	<properties>
 		<java.version>11</java.version>
-		<aws-java-sdk.version>1.12.150</aws-java-sdk.version>
+		<aws-java-sdk.version>2.17.121</aws-java-sdk.version>
 		<jasperreports.version>6.18.1</jasperreports.version>
 		<modelmapper.version>2.4.2</modelmapper.version>
 	</properties>
@@ -66,9 +66,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>${aws-java-sdk.version}</version>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
 		</dependency>
 
 		<dependency>
@@ -107,6 +106,18 @@
 			<scope>annotationProcessor</scope>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>bom</artifactId>
+			<version>${aws-java-sdk.version}</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
