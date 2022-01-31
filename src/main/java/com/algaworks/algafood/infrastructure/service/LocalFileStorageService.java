@@ -8,21 +8,20 @@ import com.algaworks.algafood.core.storage.StorageProperties;
 import com.algaworks.algafood.domain.service.FileStorageService;
 import com.algaworks.algafood.infrastructure.exception.StorageException;
 
-import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Service
 public class LocalFileStorageService implements FileStorageService {
 
     private final StorageProperties storageProperties;
 
     @Override
-    public InputStream get(String fileName) {
+    public RecoveredFile get(String fileName) {
         try {
             Path target = resolveFilePath(fileName);
-            return Files.newInputStream(target);
+            return RecoveredFile.builder()
+                    .content(Files.newInputStream(target))
+                    .build();
         } catch (Exception e) {
             throw new StorageException("Não foi possível recuperar o arquivo", e);
         }

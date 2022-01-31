@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -14,6 +14,7 @@ import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
 import com.algaworks.algafood.domain.service.FileStorageService;
+import com.algaworks.algafood.domain.service.FileStorageService.RecoveredFile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -55,26 +56,33 @@ public class RestauranteProdutoFotoController {
     }
 
     @GetMapping(produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE })
-    public ResponseEntity<InputStreamResource> buscarImagem(
+    public ResponseEntity<?> buscarImagem(
             @PathVariable Long restauranteId,
             @PathVariable Long produtoId,
             @RequestHeader(name = HttpHeaders.ACCEPT) String acceptHeader
-    ) throws HttpMediaTypeNotAcceptableException {
+    ) throws HttpMediaTypeNotAcceptableException, URISyntaxException {
         FotoProduto fotoSalva = catalogoFotoProduto.buscar(restauranteId, produtoId);
-        InputStream arquivoFoto = fileStorage.get(fotoSalva.getNome());
 
         MediaType mediaTypeFoto = MediaType.parseMediaType(fotoSalva.getContentType());
         List<MediaType> mediaTypesAceitas = MediaType.parseMediaTypes(acceptHeader);
-
+        
         boolean naoCompativel = mediaTypesAceitas.stream()
-                .noneMatch(mediaTypeAceita -> mediaTypeAceita.isCompatibleWith(mediaTypeFoto));
+        .noneMatch(mediaTypeAceita -> mediaTypeAceita.isCompatibleWith(mediaTypeFoto));
         if (naoCompativel) {
             throw new HttpMediaTypeNotAcceptableException(List.of(mediaTypeFoto));
         }
 
-        return ResponseEntity.ok()
-                .contentType(mediaTypeFoto)
-                .body(new InputStreamResource(arquivoFoto));
+        RecoveredFile fotoRecuperada = fileStorage.get(fotoSalva.getNome());
+
+        if (fotoRecuperada.hasUrl()) {
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(fotoRecuperada.getUrl().toURI())
+                    .build();
+        } else {
+            return ResponseEntity.ok()
+                    .contentType(mediaTypeFoto)
+                    .body(new InputStreamResource(fotoRecuperada.getContent()));
+        }
     }
 
     @PutMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

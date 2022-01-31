@@ -47,6 +47,8 @@ public class CatalogoFotoProdutoService {
         File file = File.builder()
                 .name(novoNome)
                 .content(arquivo)
+                .contentType(foto.getContentType())
+                .size(foto.getTamanho())
                 .build();
 
         fileStorage.replace(file, nomeFotoExistente);

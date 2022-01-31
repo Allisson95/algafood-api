@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.UUID;
 
 import lombok.Builder;
@@ -8,7 +9,7 @@ import lombok.Getter;
 
 public interface FileStorageService {
 
-    InputStream get(String fileName);
+    RecoveredFile get(String fileName);
 
     void store(File file);
 
@@ -31,7 +32,26 @@ public interface FileStorageService {
     class File {
 
         private String name;
+        private String contentType;
         private InputStream content;
+        private Long size;
+
+    }
+
+    @Builder
+    @Getter
+    class RecoveredFile {
+
+        private InputStream content;
+        private URL url;
+
+        public boolean hasUrl() {
+            return url != null;
+        }
+
+        public boolean hasContent() {
+            return content != null;
+        }
 
     }
 

@@ -16,6 +16,7 @@
 	<description>API de delivery de comida</description>
 	<properties>
 		<java.version>11</java.version>
+		<aws-java-sdk.version>1.12.150</aws-java-sdk.version>
 		<jasperreports.version>6.18.1</jasperreports.version>
 		<modelmapper.version>2.4.2</modelmapper.version>
 	</properties>
@@ -62,6 +63,12 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>${aws-java-sdk.version}</version>
 		</dependency>
 
 		<dependency>
