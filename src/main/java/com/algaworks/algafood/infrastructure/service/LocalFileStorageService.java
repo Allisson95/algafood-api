@@ -4,20 +4,19 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.algaworks.algafood.core.storage.StorageProperties;
 import com.algaworks.algafood.domain.service.FileStorageService;
 import com.algaworks.algafood.infrastructure.exception.StorageException;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class LocalFileStorageService implements FileStorageService {
 
-    private final Path dirStorage;
-
-    public LocalFileStorageService(@Value("${algafood.storage.local.dir}") Path dirStorage) {
-        this.dirStorage = dirStorage;
-    }
+    private final StorageProperties storageProperties;
 
     @Override
     public InputStream get(String fileName) {
@@ -54,7 +53,7 @@ public class LocalFileStorageService implements FileStorageService {
     }
 
     private Path resolveFilePath(String fileName) {
-        return dirStorage.resolve(Path.of(fileName));
+        return storageProperties.getLocal().getDir().resolve(Path.of(fileName));
     }
 
 }
