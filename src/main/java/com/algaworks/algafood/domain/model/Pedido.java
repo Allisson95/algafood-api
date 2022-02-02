@@ -19,17 +19,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.algaworks.algafood.domain.event.PedidoCanceladoEvent;
+import com.algaworks.algafood.domain.event.PedidoConfirmadoEvent;
 import com.algaworks.algafood.domain.exception.NegocioException;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 
 	private static final String MSG_STATUS_NAO_PODE_SER_ALTERADO = "Status do pedido %s não pode ser alterado de %s para %s";
 
@@ -108,6 +111,8 @@ public class Pedido {
 	public void confirmar() {
 		setStatus(StatusPedido.CONFIRMADO);
 		setDataConfirmacao(OffsetDateTime.now());
+
+		registerEvent(new PedidoConfirmadoEvent(this));
 	}
 
 	public void entregar() {
@@ -118,6 +123,8 @@ public class Pedido {
 	public void cancelar() {
 		setStatus(StatusPedido.CANCELADO);
 		setDataCancelamento(OffsetDateTime.now());
+
+		registerEvent(new PedidoCanceladoEvent(this));
 	}
 
 }
