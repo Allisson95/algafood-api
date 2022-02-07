@@ -1,7 +1,5 @@
 package com.algaworks.algafood.core.email;
 
-import java.util.Set;
-
 import javax.validation.constraints.NotNull;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

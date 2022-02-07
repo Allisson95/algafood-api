@@ -128,6 +128,7 @@ public class OpenApiConfig {
         };
     }
 
+    @SuppressWarnings("rawtypes")
     private Map<String, Schema> schemas() {
         final Map<String, Schema> schemas = new LinkedHashMap<>();
 
