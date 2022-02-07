@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import com.algaworks.algafood.api.assembler.FotoProdutoModelAssembler;
 import com.algaworks.algafood.api.model.FotoProdutoModel;
 import com.algaworks.algafood.api.model.input.FotoProdutoInput;
+import com.algaworks.algafood.api.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
 import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
@@ -35,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/fotos")
-public class RestauranteProdutoFotoController {
+public class RestauranteProdutoFotoController implements RestauranteProdutoFotoControllerOpenApi {
 
     @Autowired
     private CatalogoFotoProdutoService catalogoFotoProduto;
@@ -50,12 +51,14 @@ public class RestauranteProdutoFotoController {
     private FileStorageService fileStorage;
 
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
+    @Override
     public FotoProdutoModel buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         FotoProduto fotoSalva = catalogoFotoProduto.buscar(restauranteId, produtoId);
         return fotoProdutoModelAssembler.toModel(fotoSalva);
     }
 
     @GetMapping(produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE })
+    @Override
     public ResponseEntity<?> buscarImagem(
             @PathVariable Long restauranteId,
             @PathVariable Long produtoId,
@@ -86,6 +89,7 @@ public class RestauranteProdutoFotoController {
     }
 
     @PutMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @Override
     public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId, @Valid FotoProdutoInput input) throws IOException {
         Produto produto = cadastroProduto.buscar(restauranteId, produtoId);
 
@@ -105,6 +109,7 @@ public class RestauranteProdutoFotoController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public void remover(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         catalogoFotoProduto.remover(restauranteId, produtoId);
     }

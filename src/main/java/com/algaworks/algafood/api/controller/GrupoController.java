@@ -4,6 +4,15 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.assembler.GrupoInputDisassembler;
+import com.algaworks.algafood.api.assembler.GrupoModelAssembler;
+import com.algaworks.algafood.api.model.GrupoModel;
+import com.algaworks.algafood.api.model.input.GrupoInput;
+import com.algaworks.algafood.api.openapi.controller.GrupoControllerOpenApi;
+import com.algaworks.algafood.domain.model.Grupo;
+import com.algaworks.algafood.domain.repository.GrupoRepository;
+import com.algaworks.algafood.domain.service.CadastroGrupoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,17 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.GrupoInputDisassembler;
-import com.algaworks.algafood.api.assembler.GrupoModelAssembler;
-import com.algaworks.algafood.api.model.GrupoModel;
-import com.algaworks.algafood.api.model.input.GrupoInput;
-import com.algaworks.algafood.domain.model.Grupo;
-import com.algaworks.algafood.domain.repository.GrupoRepository;
-import com.algaworks.algafood.domain.service.CadastroGrupoService;
-
 @RestController
 @RequestMapping("/grupos")
-public class GrupoController {
+public class GrupoController implements GrupoControllerOpenApi {
 
 	@Autowired
 	private GrupoRepository grupoRepository;
@@ -41,12 +42,14 @@ public class GrupoController {
 	private GrupoInputDisassembler grupoInputDisassembler;
 
 	@GetMapping
+	@Override
 	public List<GrupoModel> listar() {
 		List<Grupo> grupos = grupoRepository.findAll();
 		return grupoModelAssembler.toCollectionModel(grupos);
 	}
 
 	@GetMapping("/{grupoId}")
+	@Override
 	public GrupoModel buscar(@PathVariable Long grupoId) {
 		Grupo grupo = cadastroGrupo.buscar(grupoId);
 		return grupoModelAssembler.toModel(grupo);
@@ -54,6 +57,7 @@ public class GrupoController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@Override
 	public GrupoModel adicionar(@RequestBody @Valid GrupoInput grupoInput) {
 		Grupo grupo = grupoInputDisassembler.toDomain(grupoInput);
 		Grupo grupoSalvo = cadastroGrupo.salvar(grupo);
@@ -61,6 +65,7 @@ public class GrupoController {
 	}
 
 	@PutMapping("/{grupoId}")
+	@Override
 	public GrupoModel atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoInput grupoInput) {
 		Grupo grupoSalvo = cadastroGrupo.buscar(grupoId);
 		grupoInputDisassembler.copyToDomain(grupoInput, grupoSalvo);
@@ -70,6 +75,7 @@ public class GrupoController {
 
 	@DeleteMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Override
 	public void remover(@PathVariable Long grupoId) {
 		cadastroGrupo.excluir(grupoId);
 	}

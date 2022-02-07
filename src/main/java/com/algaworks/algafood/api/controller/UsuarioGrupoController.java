@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.algaworks.algafood.api.assembler.GrupoModelAssembler;
 import com.algaworks.algafood.api.model.GrupoModel;
+import com.algaworks.algafood.api.openapi.controller.UsuarioGrupoControllerOpenApi;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/usuarios/{usuarioId}/grupos")
-public class UsuarioGrupoController {
+public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 
     @Autowired
     private CadastroUsuarioService cadastroUsuario;
@@ -30,6 +31,7 @@ public class UsuarioGrupoController {
     private GrupoModelAssembler grupoModelAssembler;
 
     @GetMapping
+    @Override
     public List<GrupoModel> listar(@PathVariable Long usuarioId) {
         Usuario usuarioSalvo = cadastroUsuario.buscar(usuarioId);
         Set<Grupo> grupos = usuarioSalvo.getGrupos();
@@ -38,12 +40,14 @@ public class UsuarioGrupoController {
 
     @PutMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public void associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
         cadastroUsuario.adicionarGrupo(usuarioId, grupoId);
     }
 
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public void desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
         cadastroUsuario.removerGrupo(usuarioId, grupoId);
     }

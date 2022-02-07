@@ -9,6 +9,7 @@ import com.algaworks.algafood.api.assembler.ProdutoInputDisassembler;
 import com.algaworks.algafood.api.assembler.ProdutoModelAssembler;
 import com.algaworks.algafood.api.model.ProdutoModel;
 import com.algaworks.algafood.api.model.input.ProdutoInput;
+import com.algaworks.algafood.api.openapi.controller.RestauranteProdutosControllerOpenApi;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos")
-public class RestauranteProdutosController {
+public class RestauranteProdutosController implements RestauranteProdutosControllerOpenApi {
 
     @Autowired
     private CadastroRestauranteService cadastroRestaurante;
@@ -42,6 +43,7 @@ public class RestauranteProdutosController {
     private ProdutoInputDisassembler produtoInputDisassembler;
 
     @GetMapping
+    @Override
     public List<ProdutoModel> listar(@PathVariable Long restauranteId) {
         Restaurante restauranteSalvo = cadastroRestaurante.buscar(restauranteId);
         Set<Produto> produtos = restauranteSalvo.getProdutos();
@@ -49,6 +51,7 @@ public class RestauranteProdutosController {
     }
 
     @GetMapping("/{produtoId}")
+    @Override
     public ProdutoModel buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         Produto produtoSalvo = cadastroProduto.buscar(restauranteId, produtoId);
         return produtoModelAssembler.toModel(produtoSalvo);
@@ -56,6 +59,7 @@ public class RestauranteProdutosController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Override
     public ProdutoModel adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
         Restaurante restauranteSalvo = cadastroRestaurante.buscar(restauranteId);
         Produto produto = produtoInputDisassembler.toDomain(produtoInput);
@@ -68,6 +72,7 @@ public class RestauranteProdutosController {
 
     @PutMapping("/{produtoId}")
     @ResponseStatus(HttpStatus.CREATED)
+    @Override
     public ProdutoModel atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestBody @Valid ProdutoInput produtoInput) {
         Produto produtoSalvo = cadastroProduto.buscar(restauranteId, produtoId);
 

@@ -19,6 +19,7 @@
 		<aws-java-sdk.version>2.17.121</aws-java-sdk.version>
 		<jasperreports.version>6.18.1</jasperreports.version>
 		<modelmapper.version>2.4.2</modelmapper.version>
+		<springdoc-openapi-ui.version>1.6.6</springdoc-openapi-ui.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -102,6 +103,12 @@
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>${modelmapper.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>${springdoc-openapi-ui.version}</version>
 		</dependency>
 
 		<dependency>

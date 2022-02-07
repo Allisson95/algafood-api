@@ -4,6 +4,17 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.assembler.CidadeInputDisassembler;
+import com.algaworks.algafood.api.assembler.CidadeModelAssembler;
+import com.algaworks.algafood.api.model.CidadeModel;
+import com.algaworks.algafood.api.model.input.CidadeInput;
+import com.algaworks.algafood.api.openapi.controller.CidadeControllerOpenApi;
+import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
+import com.algaworks.algafood.domain.exception.NegocioException;
+import com.algaworks.algafood.domain.model.Cidade;
+import com.algaworks.algafood.domain.repository.CidadeRepository;
+import com.algaworks.algafood.domain.service.CadastroCidadeService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,19 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.CidadeInputDisassembler;
-import com.algaworks.algafood.api.assembler.CidadeModelAssembler;
-import com.algaworks.algafood.api.model.CidadeModel;
-import com.algaworks.algafood.api.model.input.CidadeInput;
-import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
-import com.algaworks.algafood.domain.exception.NegocioException;
-import com.algaworks.algafood.domain.model.Cidade;
-import com.algaworks.algafood.domain.repository.CidadeRepository;
-import com.algaworks.algafood.domain.service.CadastroCidadeService;
-
 @RestController
 @RequestMapping("/cidades")
-public class CidadeController {
+public class CidadeController implements CidadeControllerOpenApi {
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
@@ -43,12 +44,14 @@ public class CidadeController {
 	private CidadeInputDisassembler cidadeInputDisassembler;
 
 	@GetMapping
+	@Override
 	public List<CidadeModel> listar() {
 		List<Cidade> cidades = cidadeRepository.findAll();
 		return cidadeModelAssembler.toCollectionModel(cidades);
 	}
 
 	@GetMapping("/{cidadeId}")
+	@Override
 	public CidadeModel buscar(@PathVariable("cidadeId") Long cidadeId) {
 		Cidade cidade = cadastroCidade.buscar(cidadeId);
 		return cidadeModelAssembler.toModel(cidade);
@@ -56,6 +59,7 @@ public class CidadeController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@Override
 	public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
 		try {
 			Cidade cidade = cidadeInputDisassembler.toDomain(cidadeInput);
@@ -69,7 +73,10 @@ public class CidadeController {
 	}
 
 	@PutMapping("/{cidadeId}")
-	public CidadeModel atualizar(@PathVariable("cidadeId") Long cidadeId, @RequestBody @Valid CidadeInput cidadeInput) {
+	@Override
+	public CidadeModel atualizar(
+			@PathVariable("cidadeId") Long cidadeId,
+			@RequestBody @Valid CidadeInput cidadeInput) {
 		try {
 			Cidade cidadeSalva = cadastroCidade.buscar(cidadeId);
 
@@ -85,6 +92,7 @@ public class CidadeController {
 
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Override
 	public void remover(@PathVariable("cidadeId") Long cidadeId) {
 		cadastroCidade.excluir(cidadeId);
 	}

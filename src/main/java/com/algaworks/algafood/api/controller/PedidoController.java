@@ -11,6 +11,7 @@ import com.algaworks.algafood.api.assembler.PedidoResumoModelAssembler;
 import com.algaworks.algafood.api.model.PedidoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.api.model.input.PedidoInput;
+import com.algaworks.algafood.api.openapi.controller.PedidoControllerOpenApi;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.filter.PedidoFilter;
@@ -38,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/pedidos")
-public class PedidoController {
+public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -59,6 +60,7 @@ public class PedidoController {
     private PedidoInputDisassembler pedidoInputDisassembler;
 
     @GetMapping
+    @Override
     public Page<PedidoResumoModel> pesquisar(PedidoFilter filter, @PageableDefault(size = 10) Pageable pageable) {
         Page<Pedido> pagePedidos = pedidoRepository.findAll(PedidoSpecs.filter(filter), pageable);
 
@@ -68,6 +70,7 @@ public class PedidoController {
     }
 
     @GetMapping("/{codigoPedido}")
+    @Override
     public PedidoModel buscar(@PathVariable UUID codigoPedido) {
         Pedido pedidoSalvo = emissaoPedido.buscar(codigoPedido);
         return pedidoModelAssembler.toModel(pedidoSalvo);
@@ -75,6 +78,7 @@ public class PedidoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Override
     public PedidoModel emitir(@RequestBody @Valid PedidoInput pedidoInput) {
         try {
             Pedido pedido = pedidoInputDisassembler.toDomain(pedidoInput);
@@ -94,18 +98,21 @@ public class PedidoController {
 
     @PutMapping("/{codigoPedido}/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public void confirmar(@PathVariable UUID codigoPedido) {
         fluxoPedido.confirmar(codigoPedido);
     }
 
     @PutMapping("/{codigoPedido}/entrega")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public void entregar(@PathVariable UUID codigoPedido) {
         fluxoPedido.entregar(codigoPedido);
     }
 
     @PutMapping("/{codigoPedido}/cancelamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public void cancelar(@PathVariable UUID codigoPedido) {
         fluxoPedido.cancelar(codigoPedido);
     }

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.algaworks.algafood.api.assembler.UsuarioModelAssembler;
 import com.algaworks.algafood.api.model.UsuarioModel;
-import com.algaworks.algafood.domain.model.FormaPagamento;
+import com.algaworks.algafood.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/responsaveis")
-public class RestauranteUsuarioResponsavelController {
+public class RestauranteUsuarioResponsavelController implements RestauranteUsuarioResponsavelControllerOpenApi {
 
     @Autowired
     private CadastroRestauranteService cadastroRestaurante;
@@ -31,6 +31,7 @@ public class RestauranteUsuarioResponsavelController {
     private UsuarioModelAssembler usuarioModelAssembler;
 
     @GetMapping
+    @Override
     public List<UsuarioModel> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestaurante.buscar(restauranteId);
         Set<Usuario> responsaveis = restaurante.getResponsaveis();
@@ -40,12 +41,14 @@ public class RestauranteUsuarioResponsavelController {
 
     @PutMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public void associar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
         cadastroRestaurante.adicionarResponsavel(restauranteId, usuarioId);
     }
 
     @DeleteMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Override
     public void desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
         cadastroRestaurante.removerResponsavel(restauranteId, usuarioId);
     }
