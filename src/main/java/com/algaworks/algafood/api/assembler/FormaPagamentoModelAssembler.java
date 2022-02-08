@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.assembler;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static com.algaworks.algafood.api.AlgaLinks.linkToFormaPagamento;
+import static com.algaworks.algafood.api.AlgaLinks.linkToFormasPagamento;
 
 import com.algaworks.algafood.api.controller.FormaPagamentoController;
 import com.algaworks.algafood.api.model.FormaPagamentoModel;
@@ -16,31 +16,29 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FormaPagamentoModelAssembler
-		extends RepresentationModelAssemblerSupport<FormaPagamento, FormaPagamentoModel> {
+        extends RepresentationModelAssemblerSupport<FormaPagamento, FormaPagamentoModel> {
 
-	@Autowired
-	private ModelMapper mapper;
+    @Autowired
+    private ModelMapper mapper;
 
-	public FormaPagamentoModelAssembler() {
-		super(FormaPagamentoController.class, FormaPagamentoModel.class);
-	}
+    public FormaPagamentoModelAssembler() {
+        super(FormaPagamentoController.class, FormaPagamentoModel.class);
+    }
 
-	@Override
-	public FormaPagamentoModel toModel(FormaPagamento source) {
-		FormaPagamentoModel formaPagamentoModel = mapper.map(source, FormaPagamentoModel.class);
+    @Override
+    public FormaPagamentoModel toModel(FormaPagamento entity) {
+        FormaPagamentoModel formaPagamentoModel = mapper.map(entity, FormaPagamentoModel.class);
 
-		formaPagamentoModel.add(
-				linkTo(methodOn(FormaPagamentoController.class).buscar(formaPagamentoModel.getId())).withSelfRel());
-		formaPagamentoModel
-				.add(linkTo(methodOn(FormaPagamentoController.class).listar()).withRel(IanaLinkRelations.COLLECTION));
+        formaPagamentoModel.add(linkToFormaPagamento(entity.getId()));
+        formaPagamentoModel.add(linkToFormasPagamento());
 
-		return formaPagamentoModel;
-	}
+        return formaPagamentoModel;
+    }
 
-	@Override
-	public CollectionModel<FormaPagamentoModel> toCollectionModel(Iterable<? extends FormaPagamento> entities) {
-		return super.toCollectionModel(entities)
-				.add(linkTo(methodOn(FormaPagamentoController.class).listar()).withSelfRel());
-	}
+    @Override
+    public CollectionModel<FormaPagamentoModel> toCollectionModel(Iterable<? extends FormaPagamento> entities) {
+        return super.toCollectionModel(entities)
+                .add(linkToFormasPagamento(IanaLinkRelations.SELF));
+    }
 
 }

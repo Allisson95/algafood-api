@@ -1,11 +1,11 @@
 package com.algaworks.algafood.api.assembler;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static com.algaworks.algafood.api.AlgaLinks.linkToCidade;
+import static com.algaworks.algafood.api.AlgaLinks.linkToCozinha;
+import static com.algaworks.algafood.api.AlgaLinks.linkToEstado;
+import static com.algaworks.algafood.api.AlgaLinks.linkToRestaurante;
+import static com.algaworks.algafood.api.AlgaLinks.linkToRestaurantes;
 
-import com.algaworks.algafood.api.controller.CidadeController;
-import com.algaworks.algafood.api.controller.CozinhaController;
-import com.algaworks.algafood.api.controller.EstadoController;
 import com.algaworks.algafood.api.controller.RestauranteController;
 import com.algaworks.algafood.api.model.RestauranteModel;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -20,43 +20,36 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestauranteModelAssembler extends RepresentationModelAssemblerSupport<Restaurante, RestauranteModel> {
 
-	@Autowired
-	private ModelMapper mapper;
+    @Autowired
+    private ModelMapper mapper;
 
-	public RestauranteModelAssembler() {
-		super(RestauranteController.class, RestauranteModel.class);
-	}
+    public RestauranteModelAssembler() {
+        super(RestauranteController.class, RestauranteModel.class);
+    }
 
-	@Override
-	public RestauranteModel toModel(Restaurante restaurante) {
-		RestauranteModel restauranteModel = mapper.map(restaurante, RestauranteModel.class);
+    @Override
+    public RestauranteModel toModel(Restaurante restaurante) {
+        RestauranteModel restauranteModel = mapper.map(restaurante, RestauranteModel.class);
 
-		restauranteModel
-				.add(linkTo(methodOn(RestauranteController.class).buscar(restauranteModel.getId())).withSelfRel());
-		restauranteModel
-				.add(linkTo(methodOn(RestauranteController.class).listar()).withRel(IanaLinkRelations.COLLECTION));
+        restauranteModel.add(linkToRestaurante(restaurante.getId()));
+        restauranteModel.add(linkToRestaurantes());
+        restauranteModel.getCozinha().add(linkToCozinha(restaurante.getCozinha().getId()));
 
-		restauranteModel.getCozinha().add(
-				linkTo(methodOn(CozinhaController.class).buscar(restauranteModel.getCozinha().getId())).withSelfRel());
+        if (restauranteModel.getEndereco() != null) {
+            Long cidadeId = restaurante.getEndereco().getCidade().getId();
+            Long estadoId = restaurante.getEndereco().getCidade().getEstado().getId();
 
-		if (restauranteModel.getEndereco() != null) {
-			restauranteModel.getEndereco().getCidade().add(
-					linkTo(methodOn(CidadeController.class).buscar(restauranteModel.getEndereco().getCidade().getId()))
-							.withSelfRel());
+            restauranteModel.getEndereco().getCidade().add(linkToCidade(cidadeId));
+            restauranteModel.getEndereco().getCidade().getEstado().add(linkToEstado(estadoId));
+        }
 
-			restauranteModel.getEndereco().getCidade().getEstado().add(
-					linkTo(methodOn(EstadoController.class)
-							.buscar(restauranteModel.getEndereco().getCidade().getEstado().getId()))
-									.withSelfRel());
-		}
+        return restauranteModel;
+    }
 
-		return restauranteModel;
-	}
-
-	@Override
-	public CollectionModel<RestauranteModel> toCollectionModel(Iterable<? extends Restaurante> entities) {
-		return super.toCollectionModel(entities)
-				.add(linkTo(methodOn(RestauranteController.class).listar()).withSelfRel());
-	}
+    @Override
+    public CollectionModel<RestauranteModel> toCollectionModel(Iterable<? extends Restaurante> entities) {
+        return super.toCollectionModel(entities)
+                .add(linkToRestaurantes(IanaLinkRelations.SELF));
+    }
 
 }

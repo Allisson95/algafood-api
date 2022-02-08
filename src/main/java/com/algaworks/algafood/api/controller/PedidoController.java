@@ -64,7 +64,8 @@ public class PedidoController implements PedidoControllerOpenApi {
 
     @GetMapping
     @Override
-    public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filter, @PageableDefault(size = 10) Pageable pageable) {
+    public PagedModel<PedidoResumoModel> pesquisar(
+            PedidoFilter filter, @PageableDefault(size = 10) Pageable pageable) {
         Page<Pedido> pagePedidos = pedidoRepository.findAll(PedidoSpecs.filter(filter), pageable);
         return pagedResourcesAssembler.toModel(pagePedidos, pedidoResumoModelAssembler);
     }
@@ -116,5 +117,4 @@ public class PedidoController implements PedidoControllerOpenApi {
     public void cancelar(@PathVariable UUID codigoPedido) {
         fluxoPedido.cancelar(codigoPedido);
     }
-
 }

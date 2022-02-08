@@ -23,19 +23,20 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class Cidade {
 
-	@EqualsAndHashCode.Include
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@NotBlank
-	@Column
-	private String nome;
+    @NotBlank
+    @Column
+    private String nome;
 
-	@Valid
-	@ConvertGroup(from = Default.class, to = Groups.EstadoId.class)
-	@NotNull
-	@ManyToOne
-	@JoinColumn(name = "estado_id")
-	private Estado estado;
+    @Valid
+    @ConvertGroup(from = Default.class, to = Groups.EstadoId.class)
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "estado_id")
+    private Estado estado;
+
 }
