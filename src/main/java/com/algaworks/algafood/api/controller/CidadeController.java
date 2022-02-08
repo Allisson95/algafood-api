@@ -16,6 +16,7 @@ import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +46,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 
 	@GetMapping
 	@Override
-	public List<CidadeModel> listar() {
+	public CollectionModel<CidadeModel> listar() {
 		List<Cidade> cidades = cidadeRepository.findAll();
 		return cidadeModelAssembler.toCollectionModel(cidades);
 	}
