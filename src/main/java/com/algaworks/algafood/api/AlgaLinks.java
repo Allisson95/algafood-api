@@ -11,7 +11,9 @@ import com.algaworks.algafood.api.controller.EstadoController;
 import com.algaworks.algafood.api.controller.FormaPagamentoController;
 import com.algaworks.algafood.api.controller.PedidoController;
 import com.algaworks.algafood.api.controller.RestauranteController;
+import com.algaworks.algafood.api.controller.RestauranteFormaPagamentoController;
 import com.algaworks.algafood.api.controller.RestauranteProdutoController;
+import com.algaworks.algafood.api.controller.RestauranteUsuarioResponsavelController;
 import com.algaworks.algafood.api.controller.UsuarioController;
 import com.algaworks.algafood.api.controller.UsuarioGrupoController;
 
@@ -41,7 +43,7 @@ public final class AlgaLinks {
         return linkTo(methodOn(PedidoController.class).buscar(codigoPedido)).withRel(rel);
     }
 
-    public static Link linkToPedidos() {
+    public static Link linkToPedidos(LinkRelation rel) {
         String pedidosUrl = linkTo(methodOn(PedidoController.class).pesquisar(null, null)).toUri().toString();
 
         TemplateVariables filterVariables = new TemplateVariables(
@@ -50,7 +52,19 @@ public final class AlgaLinks {
                 TemplateVariable.requestParameter("dataCriacaoInicio"),
                 TemplateVariable.requestParameter("dataCriacaoFim"));
 
-        return Link.of(UriTemplate.of(pedidosUrl, filterVariables.concat(PAGE_VARIABLES)), "pedidos");
+        return Link.of(UriTemplate.of(pedidosUrl, filterVariables.concat(PAGE_VARIABLES)), rel);
+    }
+
+    public static Link linkToCofirmacaoPedido(UUID codigoPedido, LinkRelation rel) {
+        return linkTo(methodOn(PedidoController.class).confirmar(codigoPedido)).withRel(rel);
+    }
+
+    public static Link linkToEntragaPedido(UUID codigoPedido, LinkRelation rel) {
+        return linkTo(methodOn(PedidoController.class).entregar(codigoPedido)).withRel(rel);
+    }
+
+    public static Link linkToCancelamentoPedido(UUID codigoPedido, LinkRelation rel) {
+        return linkTo(methodOn(PedidoController.class).cancelar(codigoPedido)).withRel(rel);
     }
 
     public static Link linkToRestaurantes() {
@@ -68,6 +82,34 @@ public final class AlgaLinks {
     public static Link linkToRestaurante(Long restauranteId, LinkRelation rel) {
         return linkTo(methodOn(RestauranteController.class).buscar(restauranteId))
                 .withRel(rel);
+    }
+
+    public static Link linkToRestauranteAtivacao(Long restauranteId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteController.class).ativar(restauranteId))
+                .withRel(rel);
+    }
+
+    public static Link linkToRestauranteInativacao(Long restauranteId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteController.class).desativar(restauranteId))
+                .withRel(rel);
+    }
+
+    public static Link linkToRestauranteAbertura(Long restauranteId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteController.class).abrir(restauranteId))
+                .withRel(rel);
+    }
+
+    public static Link linkToRestauranteFechamento(Long restauranteId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteController.class).fechar(restauranteId))
+                .withRel(rel);
+    }
+
+    public static Link linkToRestauranteFormasPagamento(Long restauranteId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class).listar(restauranteId)).withRel(rel);
+    }
+
+    public static Link linkToRestauranteResponsavel(Long restauranteId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).listar(restauranteId)).withRel(rel);
     }
 
     public static Link linkToUsuarios() {

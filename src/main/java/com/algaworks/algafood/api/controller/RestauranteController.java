@@ -20,6 +20,7 @@ import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -97,15 +98,17 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@PutMapping("/{restauranteId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Override
-	public void ativar(@PathVariable Long restauranteId) {
+	public ResponseEntity<Void> ativar(@PathVariable Long restauranteId) {
 		cadastroRestaurante.ativar(restauranteId);
+        return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping("/{restauranteId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Override
-	public void desativar(@PathVariable Long restauranteId) {
+	public ResponseEntity<Void> desativar(@PathVariable Long restauranteId) {
 		cadastroRestaurante.desativar(restauranteId);
+        return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping("/ativacoes")
@@ -133,15 +136,17 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@PutMapping("/{restauranteId}/abertura")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Override
-	public void abrir(@PathVariable Long restauranteId) {
+	public ResponseEntity<Void> abrir(@PathVariable Long restauranteId) {
 		cadastroRestaurante.abrir(restauranteId);
+        return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping("/{restauranteId}/fechamento")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Override
-	public void fechar(@PathVariable Long restauranteId) {
+	public ResponseEntity<Void> fechar(@PathVariable Long restauranteId) {
 		cadastroRestaurante.fechar(restauranteId);
+        return ResponseEntity.noContent().build();
 	}
 
 }

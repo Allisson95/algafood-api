@@ -7,6 +7,7 @@ import com.algaworks.algafood.api.model.input.RestauranteInput;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
 
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -52,14 +53,14 @@ public interface RestauranteControllerOpenApi {
 			@ApiResponse(responseCode = "404", description = "Restaurante não encontrado", content = {
 					@Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
 	})
-	void ativar(@Parameter(description = "ID de um restaurante", example = "1", required = true) Long restauranteId);
+	ResponseEntity<Void> ativar(@Parameter(description = "ID de um restaurante", example = "1", required = true) Long restauranteId);
 
 	@Operation(summary = "Desativa um restaurante por ID", responses = {
 			@ApiResponse(responseCode = "204", description = "Restaurante inativado com sucesso"),
 			@ApiResponse(responseCode = "404", description = "Restaurante não encontrado", content = {
 					@Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
 	})
-	void desativar(@Parameter(description = "ID de um restaurante", example = "1", required = true) Long restauranteId);
+	ResponseEntity<Void> desativar(@Parameter(description = "ID de um restaurante", example = "1", required = true) Long restauranteId);
 
 	@Operation(summary = "Ativa múltiplos restaurantes", responses = {
 			@ApiResponse(responseCode = "204", description = "Restaurantes ativados com sucesso"),
@@ -78,13 +79,13 @@ public interface RestauranteControllerOpenApi {
 			@ApiResponse(responseCode = "404", description = "Restaurante não encontrado", content = {
 					@Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
 	})
-	void abrir(@Parameter(description = "ID de um restaurante", example = "1", required = true) Long restauranteId);
+	ResponseEntity<Void> abrir(@Parameter(description = "ID de um restaurante", example = "1", required = true) Long restauranteId);
 
 	@Operation(summary = "Fecha um restaurante por ID", responses = {
 			@ApiResponse(responseCode = "204", description = "Restaurante fechado com sucesso"),
 			@ApiResponse(responseCode = "404", description = "Restaurante não encontrado", content = {
 					@Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
 	})
-	void fechar(@Parameter(description = "ID de um restaurante", example = "1", required = true) Long restauranteId);
+	ResponseEntity<Void> fechar(@Parameter(description = "ID de um restaurante", example = "1", required = true) Long restauranteId);
 
 }

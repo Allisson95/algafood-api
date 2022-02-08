@@ -105,6 +105,22 @@ public class Restaurante {
 		setAberto(false);
 	}
 
+    public boolean podeAtivar() {
+        return getAtivo() == Boolean.FALSE;
+    }
+
+    public boolean podeDesativar() {
+        return getAtivo() == Boolean.TRUE;
+    }
+
+    public boolean podeAbrir() {
+        return getAtivo() == Boolean.TRUE && getAberto() == Boolean.FALSE;
+    }
+
+    public boolean podeFechar() {
+        return getAberto() == Boolean.TRUE;
+    }
+
 	public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
 		return getFormasPagamento().add(formaPagamento);
 	}

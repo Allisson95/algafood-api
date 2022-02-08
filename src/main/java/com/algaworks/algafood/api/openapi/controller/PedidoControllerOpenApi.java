@@ -11,6 +11,7 @@ import com.algaworks.algafood.domain.filter.PedidoFilter;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.ResponseEntity;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -60,7 +61,7 @@ public interface PedidoControllerOpenApi {
             @ApiResponse(responseCode = "404", description = "Pedido não encontrado", content = {
                     @Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
     })
-    void confirmar(
+    ResponseEntity<Void> confirmar(
             @Parameter(description = "Código de um pedido", example = "04813f77-79b5-11ec-9a17-0242ac1b0002", required = true) UUID codigoPedido);
 
     @Operation(summary = "Registrar entrega de pedido", responses = {
@@ -68,7 +69,7 @@ public interface PedidoControllerOpenApi {
             @ApiResponse(responseCode = "404", description = "Pedido não encontrado", content = {
                     @Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
     })
-    void entregar(
+    ResponseEntity<Void> entregar(
             @Parameter(description = "Código de um pedido", example = "04813f77-79b5-11ec-9a17-0242ac1b0002", required = true) UUID codigoPedido);
 
     @Operation(summary = "Cancelamento de pedido", responses = {
@@ -76,7 +77,7 @@ public interface PedidoControllerOpenApi {
             @ApiResponse(responseCode = "404", description = "Pedido não encontrado", content = {
                     @Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
     })
-    void cancelar(
+    ResponseEntity<Void> cancelar(
             @Parameter(description = "Código de um pedido", example = "04813f77-79b5-11ec-9a17-0242ac1b0002", required = true) UUID codigoPedido);
 
 }

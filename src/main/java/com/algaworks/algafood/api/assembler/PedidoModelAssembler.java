@@ -1,6 +1,9 @@
 package com.algaworks.algafood.api.assembler;
 
+import static com.algaworks.algafood.api.AlgaLinks.linkToCancelamentoPedido;
 import static com.algaworks.algafood.api.AlgaLinks.linkToCidade;
+import static com.algaworks.algafood.api.AlgaLinks.linkToCofirmacaoPedido;
+import static com.algaworks.algafood.api.AlgaLinks.linkToEntragaPedido;
 import static com.algaworks.algafood.api.AlgaLinks.linkToEstado;
 import static com.algaworks.algafood.api.AlgaLinks.linkToFormaPagamento;
 import static com.algaworks.algafood.api.AlgaLinks.linkToPedido;
@@ -34,7 +37,7 @@ public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pe
         PedidoModel pedidoModel = mapper.map(entity, PedidoModel.class);
 
         pedidoModel.add(linkToPedido(entity.getCodigo()));
-        pedidoModel.add(linkToPedidos());
+        pedidoModel.add(linkToPedidos(LinkRelation.of("pedidos")));
         pedidoModel.getRestaurante().add(linkToRestaurante(entity.getRestaurante().getId()));
         pedidoModel.getCliente().add(linkToUsuario(entity.getCliente().getId()));
         pedidoModel.getFormaPagamento().add(linkToFormaPagamento(entity.getFormaPagamento().getId()));
@@ -44,6 +47,18 @@ public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pe
 
         pedidoModel.getItens().forEach(itemPedido -> itemPedido.add(
                 linkToProduto(entity.getRestaurante().getId(), itemPedido.getProdutoId(), LinkRelation.of("produto"))));
+
+        if (entity.podeSerConfirmado()) {
+            pedidoModel.add(linkToCofirmacaoPedido(entity.getCodigo(), LinkRelation.of("confirmar")));
+        }
+
+        if (entity.podeSerEntregue()) {
+            pedidoModel.add(linkToEntragaPedido(entity.getCodigo(), LinkRelation.of("entregar")));
+        }
+
+        if (entity.podeSerCancelado()) {
+            pedidoModel.add(linkToCancelamentoPedido(entity.getCodigo(), LinkRelation.of("cancelar")));
+        }
 
         return pedidoModel;
     }
