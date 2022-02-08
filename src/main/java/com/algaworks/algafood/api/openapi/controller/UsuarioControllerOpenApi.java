@@ -1,12 +1,12 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
-
 import com.algaworks.algafood.api.model.UsuarioModel;
 import com.algaworks.algafood.api.model.input.NovaSenhaInput;
 import com.algaworks.algafood.api.model.input.UsuarioComSenhaInput;
 import com.algaworks.algafood.api.model.input.UsuarioInput;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
+
+import org.springframework.hateoas.CollectionModel;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface UsuarioControllerOpenApi {
 
 	@Operation(summary = "Lista os usuários")
-	List<UsuarioModel> listar();
+	CollectionModel<UsuarioModel> listar();
 
 	@Operation(summary = "Busca um usuário por ID", responses = {
 			@ApiResponse(responseCode = "200"),
