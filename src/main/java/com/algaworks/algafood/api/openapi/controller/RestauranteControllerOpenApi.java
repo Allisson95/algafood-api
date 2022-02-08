@@ -6,6 +6,8 @@ import com.algaworks.algafood.api.model.RestauranteModel;
 import com.algaworks.algafood.api.model.input.RestauranteInput;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
 
+import org.springframework.hateoas.CollectionModel;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface RestauranteControllerOpenApi {
 
 	@Operation(summary = "Lista restaurantes")
-	List<RestauranteModel> listar();
+	CollectionModel<RestauranteModel> listar();
 
 	@Operation(summary = "Busca um restaurante por ID", responses = {
 			@ApiResponse(responseCode = "200"),

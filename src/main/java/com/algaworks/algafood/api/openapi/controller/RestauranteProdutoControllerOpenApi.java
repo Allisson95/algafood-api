@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = AlgaFoodTags.PRODUTOS)
-public interface RestauranteProdutosControllerOpenApi {
+public interface RestauranteProdutoControllerOpenApi {
 
     @Operation(summary = "Lista os produtos de um restaurante", responses = {
             @ApiResponse(responseCode = "200"),

@@ -10,8 +10,8 @@ import com.algaworks.algafood.core.openapi.AlgaFoodTags;
 import com.algaworks.algafood.core.openapi.PageableParameter;
 import com.algaworks.algafood.domain.filter.PedidoFilter;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,21 +26,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface PedidoControllerOpenApi {
 
     @Operation(
-            summary = "Pesquisa os pedidos",
-            parameters = {
-                    @Parameter(in = ParameterIn.QUERY, name = "clienteId", description = "ID do cliente para filtro da pesquisa", example = "1", schema = @Schema(type = "integer")),
-                    @Parameter(in = ParameterIn.QUERY, name = "restauranteId", description = "ID do restaurante para filtro da pesquisa", example = "1", schema = @Schema(type = "integer")),
-                    @Parameter(in = ParameterIn.QUERY, name = "dataCriacaoInicio", description = "Data/hora de criação inicial para filtro da pesquisa", example = "2019-12-01T00:00:00Z", schema = @Schema(type = "string", format = "date-time")),
-                    @Parameter(in = ParameterIn.QUERY, name = "dataCriacaoFim", description = "Data/hora de criação final para filtro da pesquisa", example = "2019-12-02T23:59:59Z", schema = @Schema(type = "string", format = "date-time"))
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = PagePedidoResumoModel.class)),
-                    }),
-            }
+        summary = "Pesquisa os pedidos",
+        parameters = {
+            @Parameter(in = ParameterIn.QUERY, name = "clienteId", description = "ID do cliente para filtro da pesquisa", example = "1", schema = @Schema(type = "integer")),
+            @Parameter(in = ParameterIn.QUERY, name = "restauranteId", description = "ID do restaurante para filtro da pesquisa", example = "1", schema = @Schema(type = "integer")),
+            @Parameter(in = ParameterIn.QUERY, name = "dataCriacaoInicio", description = "Data/hora de criação inicial para filtro da pesquisa", example = "2019-12-01T00:00:00Z", schema = @Schema(type = "string", format = "date-time")),
+            @Parameter(in = ParameterIn.QUERY, name = "dataCriacaoFim", description = "Data/hora de criação final para filtro da pesquisa", example = "2019-12-02T23:59:59Z", schema = @Schema(type = "string", format = "date-time"))
+        },
+        responses = {
+            @ApiResponse(responseCode = "200"),
+        }
     )
     @PageableParameter
-    Page<PedidoResumoModel> pesquisar(
+    PagedModel<PedidoResumoModel> pesquisar(
             @Parameter(hidden = true) PedidoFilter filter,
             @Parameter(hidden = true) Pageable pageable);
 

@@ -18,6 +18,7 @@ import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,18 +46,9 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 	@Autowired
 	private RestauranteInputDisassembler restauranteInputDisassembler;
 
-//	@GetMapping("/teste")
-//	public List<Restaurante> teste(
-//			@RequestParam("nome") String nome,
-//			@RequestParam("taxaInicial") BigDecimal taxaInicial,
-//			@RequestParam("taxaFinal") BigDecimal taxaFinal
-//	) {
-//		return restauranteRepository.find(nome, taxaInicial, taxaFinal);
-//	}
-
 	@GetMapping
 	@Override
-	public List<RestauranteModel> listar() {
+	public CollectionModel<RestauranteModel> listar() {
 		List<Restaurante> restaurantes = restauranteRepository.findAll();
 		return restauranteModelAssembler.toCollectionModel(restaurantes);
 	}

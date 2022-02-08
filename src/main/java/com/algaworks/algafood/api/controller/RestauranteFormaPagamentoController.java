@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.Set;
 
 import com.algaworks.algafood.api.assembler.FormaPagamentoModelAssembler;
@@ -11,6 +13,8 @@ import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,11 +36,15 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 
     @GetMapping
     @Override
-    public List<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
+    public CollectionModel<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestaurante.buscar(restauranteId);
         Set<FormaPagamento> formasPagamento = restaurante.getFormasPagamento();
 
-        return formaPagamentoModelAssembler.toCollectionModel(formasPagamento);
+        return formaPagamentoModelAssembler.toCollectionModel(formasPagamento)
+                .mapLink(IanaLinkRelations.SELF,
+                        actualSelfLink -> linkTo(
+                                methodOn(RestauranteFormaPagamentoController.class).listar(restaurante.getId()))
+                                        .withSelfRel());
     }
 
     @PutMapping("/{formaPagamentoId}")

@@ -1,11 +1,10 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
-
 import com.algaworks.algafood.api.model.FormaPagamentoModel;
 import com.algaworks.algafood.api.model.input.FormaPagamentoInput;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
 
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface FormaPagamentoControllerOpenApi {
 
 	@Operation(summary = "Lista as formas de pagamento")
-	ResponseEntity<List<FormaPagamentoModel>> listar();
+	ResponseEntity<CollectionModel<FormaPagamentoModel>> listar();
 
 	@Operation(summary = "Busca uma forma de pagamento por ID", responses = {
 			@ApiResponse(responseCode = "200"),
@@ -35,7 +34,8 @@ public interface FormaPagamentoControllerOpenApi {
 	@Operation(summary = "Cadastra uma forma de pagamento", responses = {
 			@ApiResponse(responseCode = "201", description = "Forma de pagamento cadastrada"),
 	})
-	FormaPagamentoModel adicionar(@RequestBody(description = "Representação de uma nova forma de pagamento", required = true) FormaPagamentoInput formaPagamentoInput);
+	FormaPagamentoModel adicionar(
+			@RequestBody(description = "Representação de uma nova forma de pagamento", required = true) FormaPagamentoInput formaPagamentoInput);
 
 	@Operation(summary = "Atualiza uma forma de pagamento por ID", responses = {
 			@ApiResponse(responseCode = "200", description = "Forma de pagamento atualizada"),
@@ -43,14 +43,15 @@ public interface FormaPagamentoControllerOpenApi {
 					@Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) })
 	})
 	FormaPagamentoModel atualizar(
-		@Parameter(description = "ID de uma forma de pagamento", example = "1", required = true) Long formaPagamentoId,
-		@RequestBody(description = "Representação de uma forma de pagamento com os novos dados", required = true) FormaPagamentoInput formaPagamentoInput);
+			@Parameter(description = "ID de uma forma de pagamento", example = "1", required = true) Long formaPagamentoId,
+			@RequestBody(description = "Representação de uma forma de pagamento com os novos dados", required = true) FormaPagamentoInput formaPagamentoInput);
 
 	@Operation(summary = "Exclui uma forma de pagamento por ID", responses = {
 			@ApiResponse(responseCode = "204", description = "Forma de pagamento excluída"),
 			@ApiResponse(responseCode = "404", description = "Forma de pagamento não encontrada", content = {
 					@Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) })
 	})
-	void remover(@Parameter(description = "ID de uma forma de pagamento", example = "1", required = true) Long formaPagamentoId);
+	void remover(
+			@Parameter(description = "ID de uma forma de pagamento", example = "1", required = true) Long formaPagamentoId);
 
 }

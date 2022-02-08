@@ -4,13 +4,19 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@Relation(collectionRelation = "pedidos")
 @NoArgsConstructor
 @Data
-public class PedidoResumoModel {
+@EqualsAndHashCode(callSuper = false)
+public class PedidoResumoModel extends RepresentationModel<PedidoResumoModel> {
 
     @Schema(example = "04813f77-79b5-11ec-9a17-0242ac1b0002")
     private UUID codigo;
