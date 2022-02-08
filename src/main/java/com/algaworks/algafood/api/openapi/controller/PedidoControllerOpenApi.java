@@ -5,7 +5,6 @@ import java.util.UUID;
 import com.algaworks.algafood.api.model.PedidoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.api.model.input.PedidoInput;
-import com.algaworks.algafood.api.openapi.model.PagePedidoResumoModel;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
 import com.algaworks.algafood.core.openapi.PageableParameter;
 import com.algaworks.algafood.domain.filter.PedidoFilter;
@@ -26,16 +25,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface PedidoControllerOpenApi {
 
     @Operation(
-        summary = "Pesquisa os pedidos",
-        parameters = {
-            @Parameter(in = ParameterIn.QUERY, name = "clienteId", description = "ID do cliente para filtro da pesquisa", example = "1", schema = @Schema(type = "integer")),
-            @Parameter(in = ParameterIn.QUERY, name = "restauranteId", description = "ID do restaurante para filtro da pesquisa", example = "1", schema = @Schema(type = "integer")),
-            @Parameter(in = ParameterIn.QUERY, name = "dataCriacaoInicio", description = "Data/hora de criação inicial para filtro da pesquisa", example = "2019-12-01T00:00:00Z", schema = @Schema(type = "string", format = "date-time")),
-            @Parameter(in = ParameterIn.QUERY, name = "dataCriacaoFim", description = "Data/hora de criação final para filtro da pesquisa", example = "2019-12-02T23:59:59Z", schema = @Schema(type = "string", format = "date-time"))
-        },
-        responses = {
-            @ApiResponse(responseCode = "200"),
-        }
+            summary = "Pesquisa os pedidos",
+            parameters = {
+                @Parameter(in = ParameterIn.QUERY, name = "clienteId", description = "ID do cliente para filtro da pesquisa", example = "1", schema = @Schema(type = "integer")),
+                @Parameter(in = ParameterIn.QUERY, name = "restauranteId", description = "ID do restaurante para filtro da pesquisa", example = "1", schema = @Schema(type = "integer")),
+                @Parameter(in = ParameterIn.QUERY, name = "dataCriacaoInicio", description = "Data/hora de criação inicial para filtro da pesquisa", example = "2019-12-01T00:00:00Z", schema = @Schema(type = "string", format = "date-time")),
+                @Parameter(in = ParameterIn.QUERY, name = "dataCriacaoFim", description = "Data/hora de criação final para filtro da pesquisa", example = "2019-12-02T23:59:59Z", schema = @Schema(type = "string", format = "date-time"))
+            },
+            responses = {
+                @ApiResponse(responseCode = "200"),
+            }
     )
     @PageableParameter
     PagedModel<PedidoResumoModel> pesquisar(

@@ -15,6 +15,10 @@ import com.algaworks.algafood.domain.model.Pedido;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.TemplateVariable;
+import org.springframework.hateoas.TemplateVariables;
+import org.springframework.hateoas.UriTemplate;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +37,18 @@ public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pe
         PedidoModel pedidoModel = mapper.map(entity, PedidoModel.class);
 
         pedidoModel.add(linkTo(methodOn(PedidoController.class).buscar(pedidoModel.getCodigo())).withSelfRel());
-        pedidoModel.add(linkTo(methodOn(PedidoController.class).pesquisar(null, null)).withRel("pedidos"));
+
+        String pedidosUrl = linkTo(methodOn(PedidoController.class).pesquisar(null, null)).toUri().toString();
+        TemplateVariables pageVariables = new TemplateVariables(
+                TemplateVariable.requestParameter("page"),
+                TemplateVariable.requestParameter("size"),
+                TemplateVariable.requestParameter("sort"));
+        TemplateVariables filterVariables = new TemplateVariables(
+                TemplateVariable.requestParameter("clienteId"),
+                TemplateVariable.requestParameter("restauranteId"),
+                TemplateVariable.requestParameter("dataCriacaoInicio"),
+                TemplateVariable.requestParameter("dataCriacaoFim"));
+        pedidoModel.add(Link.of(UriTemplate.of(pedidosUrl, filterVariables.concat(pageVariables)), "pedidos"));
 
         pedidoModel.getRestaurante()
                 .add(linkTo(methodOn(RestauranteController.class).buscar(pedidoModel.getRestaurante().getId()))
@@ -55,10 +70,8 @@ public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pe
                         .buscar(pedidoModel.getEnderecoEntrega().getCidade().getEstado().getId()))
                                 .withSelfRel());
 
-        pedidoModel.getItens().forEach(itemPedido -> {
-            itemPedido.add(linkTo(methodOn(RestauranteProdutoController.class)
-                    .buscar(pedidoModel.getRestaurante().getId(), itemPedido.getProdutoId())).withRel("produto"));
-        });
+        pedidoModel.getItens().forEach(itemPedido -> itemPedido.add(linkTo(methodOn(RestauranteProdutoController.class)
+                .buscar(pedidoModel.getRestaurante().getId(), itemPedido.getProdutoId())).withRel("produto")));
 
         return pedidoModel;
     }
