@@ -1,10 +1,10 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
-
 import com.algaworks.algafood.api.model.EstadoModel;
 import com.algaworks.algafood.api.model.input.EstadoInput;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
+
+import org.springframework.hateoas.CollectionModel;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface EstadoControllerOpenApi {
 
 	@Operation(summary = "Lista os estados")
-	List<EstadoModel> listar();
+	CollectionModel<EstadoModel> listar();
 
 	@Operation(summary = "Busca um estado por ID", responses = {
 			@ApiResponse(responseCode = "200"),
