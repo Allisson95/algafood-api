@@ -1,12 +1,18 @@
 package com.algaworks.algafood.api.model;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@Relation(collectionRelation = "permissoes")
 @NoArgsConstructor
 @Data
-public class PermissaoModel {
+@EqualsAndHashCode(callSuper = false)
+public class PermissaoModel extends RepresentationModel<PermissaoModel> {
 
     @Schema(example = "1")
     private Long id;

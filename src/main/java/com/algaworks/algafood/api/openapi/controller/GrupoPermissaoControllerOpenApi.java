@@ -1,9 +1,10 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
-
 import com.algaworks.algafood.api.model.PermissaoModel;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
+
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,7 +23,7 @@ public interface GrupoPermissaoControllerOpenApi {
 			@ApiResponse(responseCode = "404", description = "Grupo não encontrado", content = {
 					@Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
 	})
-	List<PermissaoModel> buscar(
+	CollectionModel<PermissaoModel> buscar(
 			@Parameter(description = "ID de um grupo", example = "1", required = true) Long grupoId);
 
 	@Operation(summary = "Associação de permissão com grupo", responses = {
@@ -30,7 +31,7 @@ public interface GrupoPermissaoControllerOpenApi {
 			@ApiResponse(responseCode = "404", description = "Grupo ou permissão não encontrada", content = {
 					@Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
 	})
-	void associar(
+	ResponseEntity<Void> associar(
 			@Parameter(description = "ID de um grupo", example = "1", required = true) Long grupoId,
 			@Parameter(description = "ID de uma permissão", example = "1", required = true) Long permissaoId);
 
@@ -39,7 +40,7 @@ public interface GrupoPermissaoControllerOpenApi {
 			@ApiResponse(responseCode = "404", description = "Grupo ou permissão não encontrada", content = {
 					@Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
 	})
-	void desassociar(
+	ResponseEntity<Void> desassociar(
 			@Parameter(description = "ID de um grupo", example = "1", required = true) Long grupoId,
 			@Parameter(description = "ID de uma permissão", example = "1", required = true) Long permissaoId);
 

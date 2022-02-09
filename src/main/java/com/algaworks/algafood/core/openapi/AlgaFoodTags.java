@@ -16,5 +16,6 @@ public final class AlgaFoodTags {
     public static final String PRODUTOS = "Produtos";
     public static final String USUARIOS = "Usuários";
     public static final String ESTATISTICAS = "Estatísticas";
+    public static final String PERMISSOES = "Permissões";
 
 }
