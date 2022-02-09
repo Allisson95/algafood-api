@@ -1,7 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static com.algaworks.algafood.api.AlgaLinks.linkToRestauranteResponsavel;
 
 import java.util.Set;
 
@@ -41,10 +40,9 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
         Set<Usuario> responsaveis = restaurante.getResponsaveis();
 
         return usuarioModelAssembler.toCollectionModel(responsaveis)
-                .mapLink(IanaLinkRelations.SELF,
-                        actualSelfLink -> linkTo(
-                                methodOn(RestauranteUsuarioResponsavelController.class).listar(restaurante.getId()))
-                                        .withSelfRel());
+                .mapLink(
+                    IanaLinkRelations.SELF,
+                    actualSelfLink -> linkToRestauranteResponsavel(restaurante.getId(), actualSelfLink.getRel()));
     }
 
     @PutMapping("/{usuarioId}")
