@@ -46,16 +46,15 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
         CollectionModel<FormaPagamentoModel> formasPagamentoModel = formaPagamentoModelAssembler
                 .toCollectionModel(formasPagamento)
                 .mapLink(
-                    IanaLinkRelations.SELF,
-                    actualSelfLink -> linkToRestauranteFormasPagamento(restaurante.getId(), actualSelfLink.getRel()))
+                        IanaLinkRelations.SELF,
+                        actualSelfLink -> linkToRestauranteFormasPagamento(restaurante.getId(), actualSelfLink.getRel()))
                 .add(linkToRestauranteFormasPagamentoAssociar(restaurante.getId(), LinkRelation.of("associar")));
 
-        formasPagamentoModel.getContent().forEach(formaPagamentoModel -> {
+        formasPagamentoModel.getContent().forEach(formaPagamentoModel ->
             formaPagamentoModel.add(linkToRestauranteFormasPagamentoDesassociar(
                     restaurante.getId(),
                     formaPagamentoModel.getId(),
-                    LinkRelation.of("desassociar")));
-        });
+                    LinkRelation.of("desassociar"))));
 
         return formasPagamentoModel;
     }

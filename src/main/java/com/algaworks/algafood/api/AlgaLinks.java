@@ -122,6 +122,14 @@ public final class AlgaLinks {
         return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).listar(restauranteId)).withRel(rel);
     }
 
+    public static Link linkToRestauranteResponsavelAssociar(Long restauranteId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).associar(restauranteId, null)).withRel(rel);
+    }
+
+    public static Link linkToRestauranteResponsavelDesassociar(Long restauranteId, Long usuarioId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).desassociar(restauranteId, usuarioId)).withRel(rel);
+    }
+
     public static Link linkToUsuarios() {
         return linkToUsuarios(IanaLinkRelations.COLLECTION);
     }

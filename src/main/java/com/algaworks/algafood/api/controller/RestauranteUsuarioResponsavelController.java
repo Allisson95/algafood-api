@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.controller;
 
 import static com.algaworks.algafood.api.AlgaLinks.linkToRestauranteResponsavel;
+import static com.algaworks.algafood.api.AlgaLinks.linkToRestauranteResponsavelAssociar;
+import static com.algaworks.algafood.api.AlgaLinks.linkToRestauranteResponsavelDesassociar;
 
 import java.util.Set;
 
@@ -14,7 +16,9 @@ import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.LinkRelation;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,24 +43,36 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
         Restaurante restaurante = cadastroRestaurante.buscar(restauranteId);
         Set<Usuario> responsaveis = restaurante.getResponsaveis();
 
-        return usuarioModelAssembler.toCollectionModel(responsaveis)
+        CollectionModel<UsuarioModel> usuariosModel = usuarioModelAssembler.toCollectionModel(responsaveis)
                 .mapLink(
-                    IanaLinkRelations.SELF,
-                    actualSelfLink -> linkToRestauranteResponsavel(restaurante.getId(), actualSelfLink.getRel()));
+                        IanaLinkRelations.SELF,
+                        actualSelfLink -> linkToRestauranteResponsavel(restaurante.getId(), actualSelfLink.getRel()))
+                .add(linkToRestauranteResponsavelAssociar(restaurante.getId(), LinkRelation.of("associar")));
+
+        usuariosModel.getContent()
+                .forEach(usuarioModel ->
+                    usuarioModel.add(linkToRestauranteResponsavelDesassociar(
+                            restaurante.getId(),
+                            usuarioModel.getId(),
+                            LinkRelation.of("desassociar"))));
+
+        return usuariosModel;
     }
 
     @PutMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
-    public void associar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
+    public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
         cadastroRestaurante.adicionarResponsavel(restauranteId, usuarioId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
-    public void desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
+    public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
         cadastroRestaurante.removerResponsavel(restauranteId, usuarioId);
+        return ResponseEntity.noContent().build();
     }
 
 }
