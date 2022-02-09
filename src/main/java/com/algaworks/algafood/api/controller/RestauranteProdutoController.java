@@ -1,6 +1,5 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -74,7 +73,8 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
     @PutMapping("/{produtoId}")
     @ResponseStatus(HttpStatus.CREATED)
     @Override
-    public ProdutoModel atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestBody @Valid ProdutoInput produtoInput) {
+    public ProdutoModel atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId,
+            @RequestBody @Valid ProdutoInput produtoInput) {
         Produto produtoSalvo = cadastroProduto.buscar(restauranteId, produtoId);
 
         produtoInputDisassembler.copyToDomain(produtoInput, produtoSalvo);

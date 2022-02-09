@@ -59,7 +59,7 @@ public interface RestauranteProdutoFotoControllerOpenApi {
             @ApiResponse(responseCode = "404", description = "Foto de produto não encontrada", content = {
                     @Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
     })
-    void remover(
+    ResponseEntity<Void> remover(
             @Parameter(description = "ID do restaurante", example = "1", required = true) Long restauranteId,
             @Parameter(description = "ID do produto", example = "1", required = true) Long produtoId);
 

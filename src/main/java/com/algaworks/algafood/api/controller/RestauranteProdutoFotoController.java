@@ -110,8 +110,9 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
-    public void remover(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+    public ResponseEntity<Void> remover(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         catalogoFotoProduto.remover(restauranteId, produtoId);
+        return ResponseEntity.noContent().build();
     }
 
 }

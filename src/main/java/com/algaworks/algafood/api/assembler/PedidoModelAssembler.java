@@ -8,7 +8,7 @@ import static com.algaworks.algafood.api.AlgaLinks.linkToEstado;
 import static com.algaworks.algafood.api.AlgaLinks.linkToFormaPagamento;
 import static com.algaworks.algafood.api.AlgaLinks.linkToPedido;
 import static com.algaworks.algafood.api.AlgaLinks.linkToPedidos;
-import static com.algaworks.algafood.api.AlgaLinks.linkToProdutos;
+import static com.algaworks.algafood.api.AlgaLinks.linkToProduto;
 import static com.algaworks.algafood.api.AlgaLinks.linkToRestaurante;
 import static com.algaworks.algafood.api.AlgaLinks.linkToUsuario;
 
@@ -46,7 +46,7 @@ public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pe
                 .add(linkToEstado(entity.getEnderecoEntrega().getCidade().getEstado().getId()));
 
         pedidoModel.getItens().forEach(itemPedido -> itemPedido.add(
-                linkToProdutos(entity.getRestaurante().getId(), itemPedido.getProdutoId(), LinkRelation.of("produto"))));
+                linkToProduto(entity.getRestaurante().getId(), itemPedido.getProdutoId(), LinkRelation.of("produto"))));
 
         if (entity.podeSerConfirmado()) {
             pedidoModel.add(linkToCofirmacaoPedido(entity.getCodigo(), LinkRelation.of("confirmar")));

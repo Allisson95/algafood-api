@@ -13,6 +13,7 @@ import com.algaworks.algafood.api.controller.PedidoController;
 import com.algaworks.algafood.api.controller.RestauranteController;
 import com.algaworks.algafood.api.controller.RestauranteFormaPagamentoController;
 import com.algaworks.algafood.api.controller.RestauranteProdutoController;
+import com.algaworks.algafood.api.controller.RestauranteProdutoFotoController;
 import com.algaworks.algafood.api.controller.RestauranteUsuarioResponsavelController;
 import com.algaworks.algafood.api.controller.UsuarioController;
 import com.algaworks.algafood.api.controller.UsuarioGrupoController;
@@ -230,18 +231,32 @@ public final class AlgaLinks {
                 .withRel(rel);
     }
 
-    public static Link linkToProdutos(Long restauranteId, Long produtoId) {
-        return linkToProdutos(restauranteId, produtoId, IanaLinkRelations.SELF);
+    public static Link linkToProduto(Long restauranteId, Long produtoId) {
+        return linkToProduto(restauranteId, produtoId, IanaLinkRelations.SELF);
     }
 
-    public static Link linkToProdutos(Long restauranteId, Long produtoId, LinkRelation rel) {
+    public static Link linkToProduto(Long restauranteId, Long produtoId, LinkRelation rel) {
         return linkTo(methodOn(RestauranteProdutoController.class)
                 .buscar(restauranteId, produtoId)).withRel(rel);
     }
 
-    public static Link linkToRestauranteProdutos(Long restauranteId, LinkRelation rel) {
+    public static Link linkToProdutos(Long restauranteId, LinkRelation rel) {
         return linkTo(methodOn(RestauranteProdutoController.class)
                 .listar(restauranteId)).withRel(rel);
+    }
+
+    public static Link linkToProdutoFoto(Long restauranteId, Long produtoId) {
+        return linkToProdutoFoto(restauranteId, produtoId, IanaLinkRelations.SELF);
+    }
+
+    public static Link linkToProdutoFoto(Long restauranteId, Long produtoId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteProdutoFotoController.class)
+                .buscar(restauranteId, produtoId)).withRel(rel);
+    }
+
+    public static Link linkToProdutoFotoRemover(Long restauranteId, Long produtoId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteProdutoFotoController.class)
+                .remover(restauranteId, produtoId)).withRel(rel);
     }
 
 }
