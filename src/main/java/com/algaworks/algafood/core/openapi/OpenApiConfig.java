@@ -30,7 +30,6 @@ import org.springframework.context.annotation.Configuration;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.PathItem.HttpMethod;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
@@ -45,7 +44,7 @@ import io.swagger.v3.oas.models.tags.Tag;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI springShopOpenAPI() {
+    public OpenAPI algaFoodOpenAPI() {
         return new OpenAPI()
                 .info(apiInfo())
                 .tags(tags())
@@ -59,18 +58,16 @@ public class OpenApiConfig {
         return openApi -> {
             openApi.getPaths().values().forEach(pathItem ->
                 pathItem.readOperationsMap().entrySet().forEach(operationEntry -> {
-                        HttpMethod method = operationEntry.getKey();
                         ApiResponses responses = operationEntry.getValue().getResponses();
 
-                        if (method.compareTo(HttpMethod.GET) == 0) {
-                            defaultGetResponses().accept(responses);
-                        } else if (method.compareTo(HttpMethod.POST) == 0) {
-                            defaultPostPutResponses().accept(responses);
-                        } else if (method.compareTo(HttpMethod.PUT) == 0) {
-                            defaultPostPutResponses().accept(responses);
-                        } else if (method.compareTo(HttpMethod.DELETE) == 0) {
-                            defaultDeleteResponses().accept(responses);
-                        }
+                        Consumer<ApiResponses> defaultResponses = switch (operationEntry.getKey()) {
+                            case GET -> defaultGetResponses();
+                            case POST, PUT -> defaultPostPutResponses();
+                            case DELETE -> defaultDeleteResponses();
+                            default -> r -> {};
+                        };
+
+                        defaultResponses.accept(responses);
                 })
             );
 
