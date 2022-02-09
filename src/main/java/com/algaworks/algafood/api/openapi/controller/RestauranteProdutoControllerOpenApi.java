@@ -1,10 +1,10 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
-
 import com.algaworks.algafood.api.model.ProdutoModel;
 import com.algaworks.algafood.api.model.input.ProdutoInput;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
+
+import org.springframework.hateoas.CollectionModel;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,7 +24,7 @@ public interface RestauranteProdutoControllerOpenApi {
             @ApiResponse(responseCode = "404", description = "Restaurante não encontrado", content = {
                     @Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
     })
-    List<ProdutoModel> listar(
+    CollectionModel<ProdutoModel> listar(
             @Parameter(description = "ID do restaurante", example = "1", required = true) Long restauranteId);
 
     @Operation(summary = "Busca um produto de um restaurante", responses = {

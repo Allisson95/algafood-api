@@ -16,6 +16,7 @@ import com.algaworks.algafood.domain.service.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +45,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
     @GetMapping
     @Override
-    public List<ProdutoModel> listar(@PathVariable Long restauranteId) {
+    public CollectionModel<ProdutoModel> listar(@PathVariable Long restauranteId) {
         Restaurante restauranteSalvo = cadastroRestaurante.buscar(restauranteId);
         Set<Produto> produtos = restauranteSalvo.getProdutos();
         return produtoModelAssembler.toCollectionModel(produtos);

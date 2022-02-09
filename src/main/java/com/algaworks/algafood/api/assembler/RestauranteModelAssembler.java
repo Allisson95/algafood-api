@@ -9,6 +9,7 @@ import static com.algaworks.algafood.api.AlgaLinks.linkToRestauranteAtivacao;
 import static com.algaworks.algafood.api.AlgaLinks.linkToRestauranteFechamento;
 import static com.algaworks.algafood.api.AlgaLinks.linkToRestauranteFormasPagamento;
 import static com.algaworks.algafood.api.AlgaLinks.linkToRestauranteInativacao;
+import static com.algaworks.algafood.api.AlgaLinks.linkToRestauranteProdutos;
 import static com.algaworks.algafood.api.AlgaLinks.linkToRestauranteResponsavel;
 import static com.algaworks.algafood.api.AlgaLinks.linkToRestaurantes;
 
@@ -52,6 +53,7 @@ public class RestauranteModelAssembler extends RepresentationModelAssemblerSuppo
 
         restauranteModel.add(linkToRestauranteFormasPagamento(restaurante.getId(), LinkRelation.of("formas-pagamento")));
         restauranteModel.add(linkToRestauranteResponsavel(restaurante.getId(), LinkRelation.of("responsaveis")));
+        restauranteModel.add(linkToRestauranteProdutos(restaurante.getId(), LinkRelation.of("produtos")));
 
         if (restaurante.podeAbrir()) {
             restauranteModel.add(linkToRestauranteAbertura(restaurante.getId(), LinkRelation.of("abrir")));

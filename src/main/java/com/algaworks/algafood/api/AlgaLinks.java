@@ -123,11 +123,13 @@ public final class AlgaLinks {
     }
 
     public static Link linkToRestauranteResponsavelAssociar(Long restauranteId, LinkRelation rel) {
-        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).associar(restauranteId, null)).withRel(rel);
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).associar(restauranteId, null))
+                .withRel(rel);
     }
 
     public static Link linkToRestauranteResponsavelDesassociar(Long restauranteId, Long usuarioId, LinkRelation rel) {
-        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).desassociar(restauranteId, usuarioId)).withRel(rel);
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).desassociar(restauranteId, usuarioId))
+                .withRel(rel);
     }
 
     public static Link linkToUsuarios() {
@@ -228,13 +230,18 @@ public final class AlgaLinks {
                 .withRel(rel);
     }
 
-    public static Link linkToProduto(Long restauranteId, Long produtoId) {
-        return linkToProduto(restauranteId, produtoId, IanaLinkRelations.SELF);
+    public static Link linkToProdutos(Long restauranteId, Long produtoId) {
+        return linkToProdutos(restauranteId, produtoId, IanaLinkRelations.SELF);
     }
 
-    public static Link linkToProduto(Long restauranteId, Long produtoId, LinkRelation rel) {
+    public static Link linkToProdutos(Long restauranteId, Long produtoId, LinkRelation rel) {
         return linkTo(methodOn(RestauranteProdutoController.class)
                 .buscar(restauranteId, produtoId)).withRel(rel);
+    }
+
+    public static Link linkToRestauranteProdutos(Long restauranteId, LinkRelation rel) {
+        return linkTo(methodOn(RestauranteProdutoController.class)
+                .listar(restauranteId)).withRel(rel);
     }
 
 }
