@@ -1,5 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
+import static com.algaworks.algafood.api.AlgaLinks.linkToUsuarioGrupo;
+import static com.algaworks.algafood.api.AlgaLinks.linkToUsuarioGrupoAssociar;
+import static com.algaworks.algafood.api.AlgaLinks.linkToUsuarioGrupoDesassociar;
+
 import java.util.Set;
 
 import com.algaworks.algafood.api.assembler.GrupoModelAssembler;
@@ -11,7 +15,10 @@ import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.LinkRelation;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,21 +42,34 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
     public CollectionModel<GrupoModel> listar(@PathVariable Long usuarioId) {
         Usuario usuarioSalvo = cadastroUsuario.buscar(usuarioId);
         Set<Grupo> grupos = usuarioSalvo.getGrupos();
-        return grupoModelAssembler.toCollectionModel(grupos);
+        CollectionModel<GrupoModel> gruposModel = grupoModelAssembler.toCollectionModel(grupos)
+                .mapLink(
+                        IanaLinkRelations.SELF,
+                        actualSelfLink -> linkToUsuarioGrupo(usuarioSalvo.getId(), actualSelfLink.getRel()))
+                .add(linkToUsuarioGrupoAssociar(usuarioSalvo.getId(), LinkRelation.of("associar")));
+
+        gruposModel.getContent().forEach(grupoModel -> grupoModel.add(linkToUsuarioGrupoDesassociar(
+                usuarioSalvo.getId(),
+                grupoModel.getId(),
+                LinkRelation.of("desassociar"))));
+
+        return gruposModel;
     }
 
     @PutMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
-    public void associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
+    public ResponseEntity<Void> associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
         cadastroUsuario.adicionarGrupo(usuarioId, grupoId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
-    public void desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
+    public ResponseEntity<Void> desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
         cadastroUsuario.removerGrupo(usuarioId, grupoId);
+        return ResponseEntity.noContent().build();
     }
 
 }

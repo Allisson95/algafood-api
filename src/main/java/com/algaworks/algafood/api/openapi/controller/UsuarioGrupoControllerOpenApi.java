@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.model.GrupoModel;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
 
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,7 +29,7 @@ public interface UsuarioGrupoControllerOpenApi {
             @ApiResponse(responseCode = "404", description = "Usuário ou grupo não encontrado", content = {
                     @Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
     })
-    void associar(
+    ResponseEntity<Void> associar(
             @Parameter(description = "ID do usuário", example = "1", required = true) Long usuarioId,
             @Parameter(description = "ID do grupo", example = "1", required = true) Long grupoId);
 
@@ -37,7 +38,7 @@ public interface UsuarioGrupoControllerOpenApi {
             @ApiResponse(responseCode = "404", description = "Usuário ou grupo não encontrado", content = {
                     @Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
     })
-    void desassociar(
+    ResponseEntity<Void> desassociar(
             @Parameter(description = "ID do usuário", example = "1", required = true) Long usuarioId,
             @Parameter(description = "ID do grupo", example = "1", required = true) Long grupoId);
 

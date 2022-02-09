@@ -163,6 +163,16 @@ public final class AlgaLinks {
                 .withRel(rel);
     }
 
+    public static Link linkToUsuarioGrupoAssociar(Long usuarioId, LinkRelation rel) {
+        return linkTo(methodOn(UsuarioGrupoController.class).associar(usuarioId, null))
+                .withRel(rel);
+    }
+
+    public static Link linkToUsuarioGrupoDesassociar(Long usuarioId, Long grupoId, LinkRelation rel) {
+        return linkTo(methodOn(UsuarioGrupoController.class).desassociar(usuarioId, grupoId))
+                .withRel(rel);
+    }
+
     public static Link linkToFormasPagamento() {
         return linkToFormasPagamento(IanaLinkRelations.COLLECTION);
     }
