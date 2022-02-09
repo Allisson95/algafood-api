@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.algaworks.algafood.api.controller.CidadeController;
 import com.algaworks.algafood.api.controller.CozinhaController;
 import com.algaworks.algafood.api.controller.EstadoController;
+import com.algaworks.algafood.api.controller.EstatisticaController;
 import com.algaworks.algafood.api.controller.FormaPagamentoController;
 import com.algaworks.algafood.api.controller.GrupoController;
 import com.algaworks.algafood.api.controller.GrupoPermissaoController;
@@ -20,6 +21,7 @@ import com.algaworks.algafood.api.controller.RestauranteProdutoFotoController;
 import com.algaworks.algafood.api.controller.RestauranteUsuarioResponsavelController;
 import com.algaworks.algafood.api.controller.UsuarioController;
 import com.algaworks.algafood.api.controller.UsuarioGrupoController;
+import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
 
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Link;
@@ -310,6 +312,22 @@ public final class AlgaLinks {
 
     public static Link linkToPermissoes(LinkRelation rel) {
         return linkTo(methodOn(PermissaoController.class).listar()).withRel(rel);
+    }
+
+    public static Link linkToEstatisticas(LinkRelation rel) {
+        return linkTo(methodOn(EstatisticaController.class).estatisticas()).withRel(rel);
+    }
+
+    public static Link linkToEstatisticasVendasDiarias(LinkRelation rel) {
+        String vendasDiarias = linkTo(methodOn(EstatisticaController.class).vendaDiarias(null, null)).toUri().toString();
+
+        TemplateVariables filterVariables = new TemplateVariables(
+                TemplateVariable.requestParameter("restauranteId"),
+                TemplateVariable.requestParameter("dataCriacaoInicio"),
+                TemplateVariable.requestParameter("dataCriacaoFim"),
+                TemplateVariable.requestParameter("timeOffset"));
+
+        return Link.of(UriTemplate.of(vendasDiarias, filterVariables), rel);
     }
 
 }

@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.openapi.controller;
 
 import java.util.List;
 
+import com.algaworks.algafood.api.controller.EstatisticaController.EstatisticasModel;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
 import com.algaworks.algafood.domain.model.dto.VendaDiaria;
@@ -19,6 +20,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = AlgaFoodTags.ESTATISTICAS)
 public interface EstatisticaControllerOpenApi {
+
+    @Operation(hidden = true)
+    ResponseEntity<EstatisticasModel> estatisticas();
 
     @Operation(
         summary = "Consulta estatísticas de vendas diárias",

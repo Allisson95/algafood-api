@@ -1,6 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
+import static com.algaworks.algafood.api.AlgaLinks.linkToEstatisticasVendasDiarias;
+
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.algaworks.algafood.api.openapi.controller.EstatisticaControllerOpenApi;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
@@ -9,6 +12,9 @@ import com.algaworks.algafood.domain.service.VendaDiariaService;
 import com.algaworks.algafood.domain.service.VendaReportService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +32,20 @@ public class EstatisticaController implements EstatisticaControllerOpenApi {
 
     @Autowired
     private VendaReportService vendaReportService;
+
+    @GetMapping
+    @Override
+    public ResponseEntity<EstatisticasModel> estatisticas() {
+        EstatisticasModel root = new EstatisticasModel();
+
+        root.add(
+                linkToEstatisticasVendasDiarias(LinkRelation.of("vendas-diarias"))
+            );
+
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(24, TimeUnit.HOURS).cachePublic())
+            .body(root);
+    }
 
     @GetMapping(path = "/vendas-diarias", produces = { MediaType.APPLICATION_JSON_VALUE })
     @Override
@@ -46,5 +66,7 @@ public class EstatisticaController implements EstatisticaControllerOpenApi {
             .headers(headers)
             .body(vendasDiariasReport);
     }
+
+    public static class EstatisticasModel extends RepresentationModel<EstatisticasModel> { }
 
 }
