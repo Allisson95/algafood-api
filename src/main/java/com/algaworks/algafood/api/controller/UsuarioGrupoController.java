@@ -1,6 +1,5 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
 import java.util.Set;
 
 import com.algaworks.algafood.api.assembler.GrupoModelAssembler;
@@ -11,6 +10,7 @@ import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +32,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 
     @GetMapping
     @Override
-    public List<GrupoModel> listar(@PathVariable Long usuarioId) {
+    public CollectionModel<GrupoModel> listar(@PathVariable Long usuarioId) {
         Usuario usuarioSalvo = cadastroUsuario.buscar(usuarioId);
         Set<Grupo> grupos = usuarioSalvo.getGrupos();
         return grupoModelAssembler.toCollectionModel(grupos);

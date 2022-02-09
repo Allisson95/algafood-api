@@ -1,9 +1,9 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
-
 import com.algaworks.algafood.api.model.GrupoModel;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
+
+import org.springframework.hateoas.CollectionModel;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,7 +20,8 @@ public interface UsuarioGrupoControllerOpenApi {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = {
                     @Content(mediaType = "application/problem+json", schema = @Schema(ref = "Problema")) }),
     })
-    List<GrupoModel> listar(@Parameter(description = "ID do usuário", example = "1", required = true) Long usuarioId);
+    CollectionModel<GrupoModel> listar(
+            @Parameter(description = "ID do usuário", example = "1", required = true) Long usuarioId);
 
     @Operation(summary = "Associação de grupo com usuário", responses = {
             @ApiResponse(responseCode = "204", description = "Associação realizada com sucesso"),

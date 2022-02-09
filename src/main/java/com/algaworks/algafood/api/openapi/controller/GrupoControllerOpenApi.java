@@ -1,10 +1,10 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
-
 import com.algaworks.algafood.api.model.GrupoModel;
 import com.algaworks.algafood.api.model.input.GrupoInput;
 import com.algaworks.algafood.core.openapi.AlgaFoodTags;
+
+import org.springframework.hateoas.CollectionModel;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface GrupoControllerOpenApi {
 
 	@Operation(summary = "Lista os grupos")
-	List<GrupoModel> listar();
+	CollectionModel<GrupoModel> listar();
 
 	@Operation(summary = "Busca um grupo por ID", responses = {
 			@ApiResponse(responseCode = "200"),
