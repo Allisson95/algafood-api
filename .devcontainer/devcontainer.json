@@ -29,7 +29,9 @@
 		"pivotal.vscode-boot-dev-pack",
 		"gabrielbb.vscode-lombok",
 		"sonarsource.sonarlint-vscode",
-		"shengchen.vscode-checkstyle"
+		"shengchen.vscode-checkstyle",
+		"redhat.vscode-xml",
+		"redhat.fabric8-analytics"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
