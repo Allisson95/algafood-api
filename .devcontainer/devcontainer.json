@@ -22,8 +22,6 @@
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
 		"java.dependency.packagePresentation": "hierarchical",
-		"java.checkstyle.configuration": "${workspaceFolder}/checkstyle.xml",
-		"java.checkstyle.version": "9.3",
 		"java.configuration.updateBuildConfiguration": "automatic",
 		"java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"/home/vscode/.vscode-server/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\""
 	},
@@ -34,7 +32,6 @@
 		"pivotal.vscode-boot-dev-pack",
 		"gabrielbb.vscode-lombok",
 		"sonarsource.sonarlint-vscode",
-		"shengchen.vscode-checkstyle",
 		"redhat.vscode-xml",
 		"redhat.fabric8-analytics"
 	],
