@@ -8,17 +8,12 @@ import javax.mail.internet.MimeMessage;
 import com.algaworks.algafood.core.email.EmailProperties;
 import com.algaworks.algafood.domain.service.EnvioEmailService;
 import com.algaworks.algafood.domain.service.EnvioEmailService.Email.Anexo;
-import com.algaworks.algafood.domain.service.EnvioEmailService.Email.Modelo;
 import com.algaworks.algafood.infrastructure.exception.EmailException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 
 public class SmtpEnvioEmailService implements EnvioEmailService {
 
@@ -26,7 +21,7 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
     private JavaMailSender mailSender;
 
     @Autowired
-    private Configuration freemarker;
+    private ProcessadorEmailTemplate processadorEmailTemplate;
 
     @Autowired
     private EmailProperties emailProperties;
@@ -51,7 +46,7 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
         helper.setSentDate(new Date());
         helper.setSubject(email.getAssunto());
 
-        String text = processarTemplate(email.getModelo());
+        String text = processadorEmailTemplate.processarTemplate(email.getModelo());
         helper.setText(text, true);
 
         for (Anexo anexo : email.getAnexos()) {
@@ -62,16 +57,6 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
         }
 
         return mimeMessage;
-    }
-
-    protected String processarTemplate(Modelo modelo) {
-        try {
-            Template template = freemarker.getTemplate(modelo.getNome());
-
-            return FreeMarkerTemplateUtils.processTemplateIntoString(template, modelo.getParametros());
-        } catch (Exception e) {
-            throw new EmailException("Não foi possível montar o template do e-mail", e);
-        }
     }
 
 }

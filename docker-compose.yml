@@ -6,10 +6,12 @@ networks:
 
 services:
   algafood-api:
+    image: allissonabn/algafood-api
     build:
       context: .
       dockerfile: Dockerfile
     environment:
+      - SPRING_PROFILES_ACTIVE=development
       - SPRING_DATASOURCE_URL=jdbc:mysql://algafood-db:3306/algafood?createDatabaseIfNotExist=true&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USERNAME:-root}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD:-root}
@@ -19,6 +21,7 @@ services:
       - algafood-network
     depends_on:
       - algafood-db
+    restart: on-failure
 
   algafood-db:
     image: mysql:8
